@@ -2,9 +2,9 @@ var fs = require('fs');
 //返回格式化数据
 /*
 	{
-		"/":{"fileTime":469.5,"win_time":544,"doc_time":481.5,"jsReadyTime":537.5},
-		"/text1":{"fileTime":651,"win_time":704,"doc_time":652,"jsReadyTime":701},
-		"/text2":{"fileTime":651,"win_time":704,"doc_time":652,"jsReadyTime":701}
+		"/":{"headTime":469.5,"docTime":544,"jsTime":481.5,"winTime":537.5},
+		"/text1":{"headTime":651,"docTime":704,"jsTime":652,"winTime":701},
+		"/text2":{"headTime":651,"docTime":704,"jsTime":652,"winTime":701}
 	}
 */
 function getContent(path) {
@@ -19,17 +19,17 @@ function getContent(path) {
 	for (var j = 0; j < rows.length - 1; j++) {
 		var rowsDetail = rows[j].split('|');
 		if (savePage[rowsDetail[0].split('=')[1]]) {
-			savePage[rowsDetail[0].split('=')[1]].fileTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].fileTime) + parseInt(rowsDetail[1].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].win_time = (parseInt(savePage[rowsDetail[0].split('=')[1]].win_time) + parseInt(rowsDetail[2].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].doc_time = (parseInt(savePage[rowsDetail[0].split('=')[1]].doc_time) + parseInt(rowsDetail[3].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].jsReadyTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].jsReadyTime) + parseInt(rowsDetail[4].split('=')[1])) / 2;
+			savePage[rowsDetail[0].split('=')[1]].headTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].headTime) + parseInt(rowsDetail[1].split('=')[1])) / 2;
+			savePage[rowsDetail[0].split('=')[1]].docTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].docTime) + parseInt(rowsDetail[2].split('=')[1])) / 2;
+			savePage[rowsDetail[0].split('=')[1]].jsTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].jsTime) + parseInt(rowsDetail[3].split('=')[1])) / 2;
+			savePage[rowsDetail[0].split('=')[1]].winTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].winTime) + parseInt(rowsDetail[4].split('=')[1])) / 2;
 
 		} else {
 			savePage[rowsDetail[0].split('=')[1]] = {
-				fileTime: rowsDetail[1].split('=')[1],
-				win_time: rowsDetail[2].split('=')[1],
-				doc_time: rowsDetail[3].split('=')[1],
-				jsReadyTime: rowsDetail[4].split('=')[1]
+				headTime: rowsDetail[1].split('=')[1],
+				docTime: rowsDetail[2].split('=')[1],
+				jsTime: rowsDetail[3].split('=')[1],
+				winTime: rowsDetail[4].split('=')[1]
 			}
 		}
 	}
@@ -41,15 +41,15 @@ function getContent(path) {
 		{
 			date:'2014-09-02',
 			data:{
-				"/":{"fileTime":469.5,"win_time":544,"doc_time":481.5,"jsReadyTime":537.5},
-				"/text1":{"fileTime":651,"win_time":704,"doc_time":652,"jsReadyTime":701},
-				"/text2":{"fileTime":651,"win_time":704,"doc_time":652,"jsReadyTime":701}
+				"/":{"headTime":469.5,"docTime":544,"jsTime":481.5,"winTime":537.5},
+				"/text1":{"headTime":651,"docTime":704,"jsTime":652,"winTime":701},
+				"/text2":{"headTime":651,"docTime":704,"jsTime":652,"winTime":701}
 			}
 		}
 	]
 */
 function getRangeData(startTime, endTime, data) {
-	//data:2016-02-16##{"/":{"fileTime":469.5,"win_time":544,"doc_time":481.5,"jsReadyTime":537.5},"/text1":{"fileTime":651,"win_time":704,"doc_time":652,"jsReadyTime":701},"/text2":{"fileTime":651,"win_time":704,"doc_time":652,"jsReadyTime":701}}
+	//data:2016-02-16##{"/":{"headTime":469.5,"docTime":544,"jsTime":481.5,"winTime":537.5},"/text1":{"headTime":651,"docTime":704,"jsTime":652,"winTime":701},"/text2":{"headTime":651,"docTime":704,"jsTime":652,"winTime":701}}
 	var startTime = new Date(startTime.split('-')[0], startTime.split('-')[1] - 1, startTime.split('-')[2]);
 	var endTime = new Date(endTime.split('-')[0], endTime.split('-')[1] - 1, endTime.split('-')[2]);
 	var re_data = [];

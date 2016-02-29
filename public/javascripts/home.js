@@ -1,15 +1,6 @@
 $(function() {
 	initEvent();
 	init();
-	// $('a').on('click',function(e){
-	// 	e.preventDefault();
-	// })
-    var a=document.getElementsByTagName('a');
-    for(var j=0;j<a.length;j++){
-        a[j].addEventListener('click',function(e){
-            e.preventDefault();
-        })
-    }
 	function init() {
 		if (!initData || initData.length < 1) {
 			return;
@@ -34,13 +25,18 @@ $(function() {
 		$('.menu').on('click', function() {
 			$('#searchCon').toggle();
 		})
+		var load=new Loading();
 		$('#btnGet').on('click', function() {
 			var projectName = $('#project').val();
 			var startTime = $('#startTime').val();
 			var endTime = $('#endTime').val();
+			load.show();
 			$.ajax({
 				url: 'getData?projectName=' + projectName + '&startTime=' + startTime + '&endTime=' + endTime,
 				type: 'get',
+				complete:function(){
+					load.hide();
+				},
 				success: function(data) {
 					initData = data;
 					init();
@@ -103,7 +99,7 @@ $(function() {
 			calculable: true,
 			xAxis: [{
 				type: 'category',
-				data: ['白屏时间', 'win完成时间', 'DOM完成时间', 'js执行完时间']
+				data: ['白屏时间','DOM完成时间','js执行完时间','win完成时间']
 			}],
 			yAxis: [{
 				type: 'value'
@@ -126,10 +122,10 @@ $(function() {
 		var jsTime = [];
 		for (var j = 0; j < initData.length; j++) {
 			date.push(initData[j].date);
-			fileTime.push(initData[j].data[page] ? initData[j].data[page].fileTime : 0);
-			winTime.push(initData[j].data[page] ? initData[j].data[page].win_time : 0);
-			domTime.push(initData[j].data[page] ? initData[j].data[page].doc_time : 0);
-			jsTime.push(initData[j].data[page] ? initData[j].data[page].jsReadyTime : 0);
+			fileTime.push(initData[j].data[page] ? initData[j].data[page].headTime : 0);
+			winTime.push(initData[j].data[page] ? initData[j].data[page].winTime : 0);
+			domTime.push(initData[j].data[page] ? initData[j].data[page].docTime : 0);
+			jsTime.push(initData[j].data[page] ? initData[j].data[page].jsTime : 0);
 		}
 		var myChart = echarts.init(document.getElementById('main'));
 		option = {
@@ -155,7 +151,7 @@ $(function() {
 				}
 			},
 			legend: {
-				data: ['白屏时间', 'win完成时间', 'DOM完成时间', 'js执行完时间']
+				data: ['白屏时间', 'DOM完成时间', 'js执行完时间', 'win完成时间']
 			},
 			xAxis: [{
 				type: 'category',
@@ -169,18 +165,18 @@ $(function() {
 				name: '白屏时间',
 				type: 'line',
 				data: fileTime
-			}, {
-				name: 'win完成时间',
-				type: 'line',
-				data: winTime
-			}, {
+			},{
 				name: 'DOM完成时间',
 				type: 'line',
 				data: domTime
-			}, {
+			},{
 				name: 'js执行完时间',
 				type: 'line',
 				data: jsTime
+			},{
+				name: 'win完成时间',
+				type: 'line',
+				data: winTime
 			}]
 		};
 		myChart.setOption(option);

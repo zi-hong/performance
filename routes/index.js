@@ -17,13 +17,13 @@ router.get('/home', function(req, res, next) {
 	for (var j = 0; j < projectsList.length; j++) {
 		projectsList_name.push(projectsList[j].replace('.txt', ''));
 	}
-	
+
 	if (projectsList[0]) {
 		var d = fs.readFileSync('allData/' + projectsList[0], {
 			'encoding': 'utf8'
 		});
-		var list=d.split('\r\n');
-		var temp=list[list.length-2];
+		var list = d.split('\r\n');
+		var temp = list[list.length - 2];
 		lastTime = temp.split('##')[0];
 		data = encodeURIComponent(JSON.stringify([{
 			date: lastTime,
@@ -51,12 +51,14 @@ router.get('/getData', function(req, res, next) {
 })
 router.get('/saveTime', function(req, res, next) {
 	var data = '';
-	for (var j in req.query) {
-		if (j == 'project') {
-			continue;
-		}
-		data += j + '=' + req.query[j] + '|';
-	}
+	//http://10.252.57.93:3000?project=test&page=/demo/fileUpLoadTest&headTime=5828&docTime=5828&jsTime=22081&winTime=33951
+	// for (var j in req.query) {
+	// 	if (j == 'project') {
+	// 		continue;
+	// 	}
+	// 	data += j + '=' + req.query[j] + '|';
+	// }
+	data += 'page=' + decodeURIComponent(req.query.page) + '|headTime=' + req.query.headTime + '|docTime=' + req.query.docTime + '|jsTime=' + req.query.jsTime + '|winTime=' + req.query.winTime;
 	var d = new Date();
 	var year = d.getFullYear();
 	var month = (d.getMonth() + 1).length > 1 ? d.getMonth() + 1 : '0' + parseInt(d.getMonth() + 1);

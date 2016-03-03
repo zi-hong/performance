@@ -58,7 +58,7 @@ router.get('/saveTime', function(req, res, next) {
 	// 	}
 	// 	data += j + '=' + req.query[j] + '|';
 	// }
-	data += 'page=' + decodeURIComponent(req.query.page) + '|headTime=' + req.query.headTime + '|docTime=' + req.query.docTime + '|jsTime=' + req.query.jsTime + '|winTime=' + req.query.winTime;
+	data += 'page=' + decodeURIComponent(req.query.page) + '|headTime=' + req.query.headTime + '|docTime=' + req.query.docTime + '|jsTime=' + req.query.jsTime + '|winTime=' + req.query.winTime+'|headSize='+req.query.headSize+'|docSize='+req.query.docSize;
 	var d = new Date();
 	var year = d.getFullYear();
 	var month = (d.getMonth() + 1).length > 1 ? d.getMonth() + 1 : '0' + parseInt(d.getMonth() + 1);

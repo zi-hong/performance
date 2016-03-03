@@ -10,7 +10,7 @@ var j = schedule.scheduleJob(rule, function(){
 	merge();
 });
 // j.cancel();
-// merge();
+merge();
 
 function merge() {
 	var today = new Date();

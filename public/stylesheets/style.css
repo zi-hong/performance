@@ -65,7 +65,7 @@ ul,li{margin:0px;padding: 0px;}
     left: 50%;
     background-color: #ffffff;
     margin-left: -30px;
-    
+    border-radius: 5px;
 }
 @-webkit-keyframes 'play'{
     from {-webkit-transform:scale(1) rotate(0deg);}

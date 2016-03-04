@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -13,6 +14,16 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(session({
+  secret:'secret',
+  resave:true,
+  name:'58tongji',
+  saveUninitialized:false,
+  cookie:{
+    maxAge:1000*60*10 //过期时间设置(单位毫秒)
+  }
+}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -31,6 +42,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
 
 // error handlers
 

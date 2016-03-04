@@ -12,17 +12,7 @@ $(function() {
 			toMakeLine();
 		}
 	}
-	$(window).on('beforeunload',function(){
-		$.ajax({
-			url:'text',
-			success:function(){
 
-			}
-		});
-
-		// var now = +new Date()
-		//while( +new Date() - now < 10000 ) {}
-	})
 	function pageNameList() {
 		var option = '';
 		for (var h in initData[0].data) {
@@ -109,7 +99,7 @@ $(function() {
 			calculable: true,
 			xAxis: [{
 				type: 'category',
-				data: ['白屏时间','DOM完成时间','js执行完时间','win完成时间','head大小','doc大小']
+				data: ['白屏时间','DOM完成时间','js执行完时间','win完成时间']
 			}],
 			yAxis: [{
 				type: 'value'

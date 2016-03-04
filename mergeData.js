@@ -4,13 +4,14 @@ var getContent = require('./getData').getContent;
 //每天3点执行
 var rule = new schedule.RecurrenceRule();
 rule.hour = 3;
+rule.minute = 0;
 var j = schedule.scheduleJob(rule, function(){
 　　console.log(new Date());
 	console.log('执行');
 	merge();
 });
 // j.cancel();
-merge();
+// merge();
 
 function merge() {
 	var today = new Date();

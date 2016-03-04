@@ -103,3 +103,25 @@ ul,li{margin:0px;padding: 0px;}
 .loading-cover .loading-con span:nth-child(8){
     -webkit-transform: translate(14px,11px);
 }
+/******************登录页**********************/
+.loginCon{margin-top:10px;}
+@media screen and (min-width:766px) {
+    .loginCon{
+        position: absolute;
+        width: 280px;
+        top:30%;
+        left:50%;
+        margin-left: -140px;
+    }
+    .loginCon .form-group{
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .loginCon .form-group label{
+        margin-right: 10px;
+    }
+    .loginCon .form-group input[type=button]{
+        float: right;
+    }
+}

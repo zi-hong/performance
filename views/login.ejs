@@ -12,36 +12,21 @@
 	<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 	<script src='javascripts/echarts.common.min.js'></script>
+	<script type="text/javascript" src='http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.17/vue.min.js'></script>
 	<script type="text/javascript" src='javascripts/loading.js'></script>
 </head>
 <body>
-	<form class='form-inline loginCon'>
+	<form class='form-inline loginCon' id='loginCon'>
 		<div class="form-group">
-			<label>用户名</label><input id='name' class="form-control" type='text'/>
+			<label>用户名</label><input id='name' v-model="name" class="form-control" type='text'/>
 		</div>
 		<div class="form-group">
-			<label>密&nbsp;&nbsp;码</label><input id='password' class="form-control" type='password'/>
+			<label>密&nbsp;&nbsp;码</label><input id='password' v-model="password" class="form-control" type='password'/>
 		</div>
 		<div class="form-group">
-			<input class="btn btn-default" id='btn-ok' type="button" value='确定' />
+			<input class="btn btn-default" id='btn-ok' v-on:click="toLogin" type="button" value='确定' />
 		</div>
 	</form>
 </body>
-<script type="text/javascript">
-	$('#btn-ok').on('click',function () {
-		// body...
-		$.ajax({
-			url:'/login',
-			type:'post',
-			data:{name:$('#name').val(),password:$('#password').val()},
-			success:function(msg){
-				if(msg.isLogin==true){
-					location.href='/home';
-				}else{
-					alert('密码错误！');
-				}
-			}
-		})
-	})
-</script>
+<script type="text/javascript" src='javascripts/login.js'></script>
 </html>

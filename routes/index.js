@@ -31,6 +31,7 @@ router.get('/home', function(req, res, next) {
 	}
 })
 router.get('/getData', function(req, res, next) {
+	isLogin(req, res);
 	var projectName = req.query.projectName;
 	var startTime = req.query.startTime;
 	var endTime = req.query.endTime;

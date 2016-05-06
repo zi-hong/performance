@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var getData = require('../getData');
+var isLogin = require('../login');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -35,6 +36,9 @@ router.get('/home', function(req, res, next) {
 	if (isLogin(req, res)) {
 		goHome(res);
 	}
+})
+router.get('/test', function(req, res, next) {
+	res.render('test', {});
 })
 router.get('/getData', function(req, res, next) {
 	isLogin(req, res);
@@ -118,14 +122,5 @@ function goHome(res) {
 		time: lastTime,
 		data: data
 	});
-}
-
-function isLogin(req, res) {
-	if (req.session.user) {
-		return true;
-	} else {
-		res.redirect('/login');
-		return false;
-	}
 }
 module.exports = router;

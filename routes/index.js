@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var getData = require('../getData');
-var isLogin = require('../login');
+var isLogin = require('../dep/login');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -33,9 +33,7 @@ router.post('/login', function(req, res, next) {
 	}
 });
 router.get('/home', function(req, res, next) {
-	if (isLogin(req, res)) {
-		goHome(res);
-	}
+	goHome(res);
 })
 router.get('/test', function(req, res, next) {
 	res.render('test', {});

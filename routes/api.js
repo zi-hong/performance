@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var isLogin = require('../login');
+var isLogin = require('../dep/login');
 var getData = require('../getData');
 var fs = require('fs');
 
@@ -28,13 +28,11 @@ router.get('/getObjet', function(req, res, next) {
 	}
 })
 router.get('/performanceData', function(req, res, next) {
-	console.log(111);
 	// if (isLogin(req, res)) {
 		var project = req.query.project;
 		var startTime = req.query.startTime;
 		var endTime = req.query.endTime;
 		var data = [];
-		console.log(project);
 		if (fs.existsSync('allData/' + project + '.txt')) {
 			data = fs.readFileSync('allData/' + project + '.txt', {
 				'encoding': 'utf8'

@@ -93,6 +93,7 @@
 		</form>
 		</div>
 		<div id='chartMian'></div>
+		<div id="countMain"></div>
 	</div>
 </script>
 <script type="x/template" id='pagesize-template'>
@@ -112,8 +113,13 @@
 	<div>
 		<search v-bind:okfun='okFun'></search>
 		<div id='main'>
-			<pagesize-chart :show.sync="showChart"></performance-chart>
+			<pagesize-chart :show.sync="showChart"></pagesize-chart>
 		</div>
+	</div>
+</script>
+<script type="x/template" id='countChart-template'>
+	<div id='count-main'>
+		
 	</div>
 </script>
 <script type="text/javascript" src='javascripts/home.js'></script>

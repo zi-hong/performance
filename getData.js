@@ -25,6 +25,7 @@ function getContent(path) {
 			savePage[rowsDetail[0].split('=')[1]].winTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].winTime) + parseInt(rowsDetail[4].split('=')[1])) / 2;
 			savePage[rowsDetail[0].split('=')[1]].headSize = (parseInt(savePage[rowsDetail[0].split('=')[1]].headSize) + parseInt(rowsDetail[5].split('=')[1])) / 2;
 			savePage[rowsDetail[0].split('=')[1]].docSize = (parseInt(savePage[rowsDetail[0].split('=')[1]].docSize) + parseInt(rowsDetail[6].split('=')[1])) / 2;
+			savePage[rowsDetail[0].split('=')[1]].count++;
 		} else {
 			savePage[rowsDetail[0].split('=')[1]] = {
 				headTime: rowsDetail[1].split('=')[1],
@@ -33,6 +34,7 @@ function getContent(path) {
 				winTime: rowsDetail[4].split('=')[1],
 				headSize:rowsDetail[5].split('=')[1],
 				docSize:rowsDetail[6].split('=')[1],
+				count:1
 			}
 		}
 	}

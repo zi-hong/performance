@@ -102,23 +102,8 @@ function goHome(res) {
 	for (var j = 0; j < projectsList.length; j++) {
 		projectsList_name.push(projectsList[j].replace('.txt', ''));
 	}
-
-	if (projectsList[0]) {
-		var d = fs.readFileSync('allData/' + projectsList[0], {
-			'encoding': 'utf8'
-		});
-		var list = d.split('\r\n');
-		var temp = list[list.length - 2];
-		lastTime = temp.split('##')[0];
-		data = encodeURIComponent(JSON.stringify([{
-			date: lastTime,
-			data: JSON.parse(temp.split('##')[1])
-		}]));
-	}
 	res.render('home', {
-		projectsList: projectsList_name,
-		time: lastTime,
-		data: data
+		projectsList: projectsList_name
 	});
 }
 module.exports = router;

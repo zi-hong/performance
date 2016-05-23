@@ -19,12 +19,12 @@ function getContent(path) {
 	for (var j = 0; j < rows.length - 1; j++) {
 		var rowsDetail = rows[j].split('|');
 		if (savePage[rowsDetail[0].split('=')[1]]) {
-			savePage[rowsDetail[0].split('=')[1]].headTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].headTime) + parseInt(rowsDetail[1].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].docTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].docTime) + parseInt(rowsDetail[2].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].jsTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].jsTime) + parseInt(rowsDetail[3].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].winTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].winTime) + parseInt(rowsDetail[4].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].headSize = (parseInt(savePage[rowsDetail[0].split('=')[1]].headSize) + parseInt(rowsDetail[5].split('=')[1])) / 2;
-			savePage[rowsDetail[0].split('=')[1]].docSize = (parseInt(savePage[rowsDetail[0].split('=')[1]].docSize) + parseInt(rowsDetail[6].split('=')[1])) / 2;
+			savePage[rowsDetail[0].split('=')[1]].headTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].headTime) + parseInt(rowsDetail[1].split('=')[1] || 0)) / 2;
+			savePage[rowsDetail[0].split('=')[1]].docTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].docTime) + parseInt(rowsDetail[2].split('=')[1] || 0)) / 2;
+			savePage[rowsDetail[0].split('=')[1]].jsTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].jsTime) + parseInt(rowsDetail[3].split('=')[1] || 0)) / 2;
+			savePage[rowsDetail[0].split('=')[1]].winTime = (parseInt(savePage[rowsDetail[0].split('=')[1]].winTime) + parseInt(rowsDetail[4].split('=')[1] || 0)) / 2;
+			savePage[rowsDetail[0].split('=')[1]].headSize = (parseInt(savePage[rowsDetail[0].split('=')[1]].headSize) + parseInt(rowsDetail[5].split('=')[1] || 0)) / 2;
+			savePage[rowsDetail[0].split('=')[1]].docSize = (parseInt(savePage[rowsDetail[0].split('=')[1]].docSize) + parseInt(rowsDetail[6].split('=')[1] || 0)) / 2;
 			savePage[rowsDetail[0].split('=')[1]].count++;
 		} else {
 			savePage[rowsDetail[0].split('=')[1]] = {

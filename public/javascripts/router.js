@@ -7,5 +7,9 @@ router.map({
     '/pageSize': {
         component: pageSize,
         pagesize:true
+    },
+    '/pv':{
+    	component: pv,
+        pv:true
     }
 })

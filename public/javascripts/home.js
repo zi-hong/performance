@@ -19,3 +19,4 @@ var app = Vue.extend({
 	}
 });
 router.start(app, '#navList');
+router.go('performance');

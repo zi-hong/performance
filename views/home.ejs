@@ -21,6 +21,7 @@
 	<script type="text/javascript" src='javascripts/search.js'></script>
 	<script type="text/javascript" src='javascripts/performanceChart.js'></script>
 	<script type="text/javascript" src='javascripts/pagesizeChart.js'></script>
+	<script type="text/javascript" src='javascripts/pv.js'></script>
 	<script type="text/javascript" src='javascripts/pageSize.js'></script>
 	<script type="text/javascript" src='javascripts/performance.js'></script>
 	<script type="text/javascript" src='javascripts/router.js'></script>
@@ -33,6 +34,7 @@
 			<ul @click='changeRouter'>
 				<li v-link="{ path: '/performance' }" v-bind:class="{ 'active': $route.performance}"  >网站性能分析</li>
 				<li v-link="{ path: '/pageSize' }" v-bind:class="{ 'active': $route.pagesize}" >页面大小分析</li>
+				<li v-link="{ path: '/pv' }" v-bind:class="{ 'active': $route.pv}" >项目pv统计</li>
 			</ul>
 		</div>
 		<div class='page-right'>
@@ -117,8 +119,10 @@
 		</div>
 	</div>
 </script>
-<script type="x/template" id='countChart-template'>
-	<div id='count-main'>
+
+<script type="x/template" id='pvMain-template'>
+	<search v-bind:okfun='okFun'></search>
+	<div id='pvchart-main'>
 		
 	</div>
 </script>

@@ -74,26 +74,37 @@ router.get('/saveTime', function(req, res, next) {
 	}
 	res.send('');
 })
-router.get('/collect', function(req, res, next) {
+router.get('/trace', function(req, res, next) {
+	saveData(req, res,'traceData');
+})
+router.get('/info', function(req, res, next) {
+	saveData(req, res,'infoData');
+})
+function saveData(req, res,name){
 	var project = req.query.project;
-	var data = decodeURIComponent(req.query.content);
+	var data = '';
+	for (var i in req.query) {
+		if (i != 'project') {
+			data += i + '=' + req.query[i] + '|';
+		}
+	};
+	data = data.replace(/(\|)$/, '');
 	var d = new Date();
 	var year = d.getFullYear();
 	var month = (d.getMonth() + 1).length > 1 ? d.getMonth() + 1 : '0' + parseInt(d.getMonth() + 1);
 	var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
-	if (fs.existsSync('collectData/' + project)) {
+	if (fs.existsSync(name+'/' + project)) {
 		write();
 	} else {
-		fs.mkdirSync('collectData/' + project);
+		fs.mkdirSync(name+'/' + project);
 		write();
 	}
 
 	function write() {
-		fs.appendFile('collectData/' + project + '/' + year + '-' + month + '-' + day + '.txt', data + '\r\n', 'utf8', function() {});
+		fs.appendFile(name+'/' + project + '/' + year + '-' + month + '-' + day + '.txt', data + '\r\n', 'utf8', function() {});
 	}
-	res.send('');
-})
-
+	res.send('{code:1,message:"成功"}');
+}
 function goHome(res) {
 	var projectsList = fs.readdirSync('allData/');
 	var projectsList_name = [];

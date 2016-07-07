@@ -1,18 +1,19 @@
 var fs = require('fs');
 var schedule = require("node-schedule");
-var getContent = require('./getData').getContent;
+var getData = require('./getData');
+var getContent = getData.getContent;
 //每天3点执行
 var rule = new schedule.RecurrenceRule();
 rule.hour = 3;
 rule.minute = 0;
-var j = schedule.scheduleJob(rule, function(){
-　　console.log(new Date());
+var j = schedule.scheduleJob(rule, function() {　　
+	console.log(new Date());
 	console.log('执行');
 	merge();
 });
 // j.cancel();
 // merge();
-
+/*性能统计合并*/
 function merge() {
 	var today = new Date();
 	var today_date = getSplitDate(today);
@@ -24,9 +25,9 @@ function merge() {
 		var year = yesterday_date.year;
 		var month = (yesterday_date.month + 1).length > 1 ? yesterday_date.month + 1 : '0' + parseInt(yesterday_date.month + 1);
 		var day = (yesterday_date.day + '').length > 1 ? yesterday_date.day : '0' + yesterday_date.day;
-		var data = getContent('data/' + projectsList[j] + '/' + year +'-'+ month+'-'+ day + '.txt');
-		if(data){
-			fs.appendFile('allData/' + projectsList[j] + '.txt',year +'-'+ month+'-'+ day+'##'+JSON.stringify(data) + '\r\n', 'utf8', function() {});
+		var data = getContent('data/' + projectsList[j] + '/' + year + '-' + month + '-' + day + '.txt');
+		if (data) {
+			fs.appendFile('allData/' + projectsList[j] + '.txt', year + '-' + month + '-' + day + '##' + JSON.stringify(data) + '\r\n', 'utf8', function() {});
 		}
 	}
 }

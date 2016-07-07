@@ -32,9 +32,9 @@ function getContent(path) {
 				docTime: rowsDetail[2].split('=')[1],
 				jsTime: rowsDetail[3].split('=')[1],
 				winTime: rowsDetail[4].split('=')[1],
-				headSize:rowsDetail[5].split('=')[1],
-				docSize:rowsDetail[6].split('=')[1],
-				count:1
+				headSize: rowsDetail[5].split('=')[1],
+				docSize: rowsDetail[6].split('=')[1],
+				count: 1
 			}
 		}
 	}

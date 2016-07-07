@@ -1,0 +1,2 @@
+os=iphone|browser=others|dns=0|conn=0|req=27|res=1|rt=41|intr=98|referrer=|page=%2Fpage%2Ftrace|_=1467861020978|uid=localhost8080.14678610209740.8658846799716762
+os=iphone|browser=others|dns=0|conn=0|req=27|res=1|rt=41|intr=98|referrer=|page=%2Fpage%2Ftrace|_=1467861020978|uid=localhost8080.14678610209740.8658846799716762

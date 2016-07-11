@@ -50,10 +50,11 @@ var pointChart = Vue.extend({
 		showChartFun: function(val, data) {
 			var date = [];
 			var tidList = [];
-			console.log(JSON.stringify(data));
 			for (var i = 0; i < data.length; i++) {
 				date.push(data[i].date);
-				tidList.push(data[i].data[val]);
+				if(data[i].data[val]){
+					tidList.push(data[i].data[val]);
+				}
 			}
 			for (var k = 0; k < tidList.length; k++) {
 				for (var m = 0; m < tidList[k].length; m++) {

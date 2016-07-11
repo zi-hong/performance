@@ -71,7 +71,6 @@ router.get('/pointData', function(req, res, next) {
 				var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
 				var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
 				var path = 'traceData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
-				console.log(path);
 				if (!fs.existsSync(path)) {
 					continue;
 				}

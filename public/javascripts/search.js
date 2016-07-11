@@ -1,6 +1,6 @@
 var search = Vue.extend({
 	template: '#search-template',
-	data:function() {
+	data: function() {
 		return {
 			objets: [],
 			startTime: '',
@@ -12,6 +12,9 @@ var search = Vue.extend({
 		okfun: {
 			type: Function,
 			required: true
+		},
+		url: {
+			type: String
 		}
 	},
 	ready: function() {
@@ -22,7 +25,7 @@ var search = Vue.extend({
 			this.$dispatch('showLoading');
 			var that = this;
 			$.ajax({
-				url: '/api/getObjet',
+				url: that.url || '/api/getObjet',
 				complete: function() {
 					that.$dispatch('hideLoading');
 				},

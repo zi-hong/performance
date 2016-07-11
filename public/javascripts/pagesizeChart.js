@@ -46,9 +46,9 @@ var pagesizeChart = Vue.extend({
 			this.pages = a;
 			this.selPage = this.pages[0];
 			this.showChartFun(this.pages[0], initData);
-	},
-	showChartFun:function(page, initData) {
-		var date = [];
+		},
+		showChartFun: function(page, initData) {
+			var date = [];
 			var docSize = [];
 			var headSize = [];
 			for (var j = 0; j < initData.length; j++) {

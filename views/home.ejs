@@ -24,8 +24,10 @@
 	<script type="text/javascript" src='javascripts/pv.js'></script>
 	<script type="text/javascript" src='javascripts/pageSize.js'></script>
 	<script type="text/javascript" src='javascripts/performance.js'></script>
+
+	<script type="text/javascript" src='javascripts/pointChart.js'></script>
+	<script type='text/javascript' src='javascripts/point.js'></script>
 	<script type="text/javascript" src='javascripts/router.js'></script>
-	
 </head>
 <body>
 	<div class='head'>58金融页面性能统计</div>
@@ -35,6 +37,7 @@
 				<li v-link="{ path: '/performance' }" v-bind:class="{ 'active': $route.performance}"  >网站性能分析</li>
 				<li v-link="{ path: '/pageSize' }" v-bind:class="{ 'active': $route.pagesize}" >页面大小分析</li>
 				<li v-link="{ path: '/pv' }" v-bind:class="{ 'active': $route.pv}" >项目pv统计</li>
+				<li v-link="{ path: '/point' }" v-bind:class="{ 'active': $route.point}" >埋点统计</li>
 			</ul>
 		</div>
 		<div class='page-right'>
@@ -124,6 +127,26 @@
 	<search v-bind:okfun='okFun'></search>
 	<div id='pvchart-main'>
 		
+	</div>
+</script>
+
+<script type='x/template' id='pointMain-template'>
+	<search v-bind:okfun='okFun' v-bind:url='url'></search>
+	<div>
+		<point-chart :show.sync="showChart"></point-chart>
+	</div>
+</script>
+<script type="x/template" id='pointChart-template'>
+	<div class='chartCon' v-show="show">
+		<div  class='form-group'>
+		<form class='form-inline'>
+			<label class="form-label">页面</label>
+			<select v-model='selPage' class="form-control">
+				<option v-for='page in pages'>{{page}}</option>
+			</select>
+		</form>
+		</div>
+		<div id='pointMian'></div>
 	</div>
 </script>
 <script type="text/javascript" src='javascripts/home.js'></script>

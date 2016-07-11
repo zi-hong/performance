@@ -7,8 +7,9 @@ var fs = require('fs');
 router.get('/', function(req, res, next) {
 	res.send('api');
 });
+/*性能分析获取项目名*/
 router.get('/getObjet', function(req, res, next) {
-	if (isLogin(req, res)) {
+		isLogin(req, res);
 		try {
 			var projectsList = fs.readdirSync('allData/');
 			var projectsList_name = [];
@@ -25,10 +26,10 @@ router.get('/getObjet', function(req, res, next) {
 				code: 0
 			});
 		}
-	}
-})
+	})
+	/*性能统计数据*/
 router.get('/performanceData', function(req, res, next) {
-	// if (isLogin(req, res)) {
+		isLogin(req, res);
 		var project = req.query.project;
 		var startTime = req.query.startTime;
 		var endTime = req.query.endTime;
@@ -39,7 +40,137 @@ router.get('/performanceData', function(req, res, next) {
 			});
 			data = getData.getRangeData(startTime, endTime, data);
 		}
-		res.send({code:1,data:data});
-	// }
-})
+		res.send({
+			code: 1,
+			data: data
+		});
+	})
+	/*打点统计--项目名*/
+router.get('/pointProjectList', function(req, res, next) {
+		isLogin(req, res);
+		getNameList(req, res, 'traceData');
+	})
+	/*打点统计--埋点统计*/
+router.get('/pointData', function(req, res, next) {
+		// isLogin(req, res);
+		var project = req.query.project;
+		var startTime = req.query.startTime;
+		var endTime = req.query.endTime;
+
+		var startTime_date = new Date(startTime + ' 00:00');
+		var startTime_time = startTime_date.getTime();
+
+		var endTime_date = new Date(endTime + ' 00:00');
+		var endTime_time = endTime_date.getTime();
+
+		var dataList = [];
+		if (fs.existsSync('traceData/' + project)) {
+			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+				var d = new Date(i);
+				var year = d.getFullYear();
+				var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
+				var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
+				var path = 'traceData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
+				console.log(path);
+				if (!fs.existsSync(path)) {
+					continue;
+				}
+				var data = fs.readFileSync(path, {
+					'encoding': 'utf8'
+				});
+				data = getBaseData(data);
+				if (data) {
+					dataList.push({
+						date: year + '-' + mouth + '-' + day,
+						data: data
+					});
+				}
+			}
+		}
+		res.send({
+			code: 1,
+			data: dataList
+		});
+	})
+	/*打点统计--用户维度*/
+
+/*基本信息统计--项目名*/
+router.get('/infoProjectList', function(req, res, next) {
+		isLogin(req, res);
+		getNameList(req, res, 'infoData');
+	})
+	/*基本信息统计--uv*/
+
+/*基本信息统计--浏览器统计*/
+
+/*基本信息统计--来源统计*/
+
+
+/*获得项目名*/
+function getNameList(req, res, name) {
+	try {
+		var projectsList = fs.readdirSync(name + '/');
+		res.send({
+			projects: projectsList,
+			code: 1
+		});
+	} catch (ex) {
+		res.send({
+			message: ex.message,
+			code: 0
+		});
+	}
+}
+
+/*获得数据*/
+function getBaseData(data) {
+	if (!data) {
+		return;
+	}
+	var list = data.split('\r\n');
+	/*
+	{
+		pagename1: [{
+				tid: 12,
+				number: 123
+			}
+		],
+		pagename2: [{
+				tid: 12,
+				number: 123
+			}
+		]
+	}
+	*/
+	var result = {};
+	for (var j = 0; j < list.length - 1; j++) {
+		var row = list[j].split('|');
+		var rowObj = {};
+		for (var i = 0; i < row.length; i++) {
+			rowObj[row[i].split('=')[0]] = row[i].split('=')[1];
+		}
+		var isHas = false; //标记是否已添加
+		rowObj.page = decodeURIComponent(rowObj.page);
+		if (result[rowObj.page]) {
+			for (var k = 0; k < result[rowObj.page].length; k++) {
+				if (result[rowObj.page][k].tid == rowObj.tid) {
+					isHas = true;
+					result[rowObj.page][k].number++;
+				}
+			}
+			if (!isHas) {
+				result[rowObj.page].push({
+					tid: rowObj.tid,
+					number: 1
+				});
+			}
+		} else {
+			result[rowObj.page] = [{
+				tid: rowObj.tid,
+				number: 1
+			}];
+		}
+	}
+	return result;
+}
 module.exports = router;

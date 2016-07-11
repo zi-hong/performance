@@ -85,7 +85,7 @@ function saveData(req, res,name){
 	var data = '';
 	for (var i in req.query) {
 		if (i != 'project') {
-			data += i + '=' + req.query[i] + '|';
+			data += i + '=' + decodeURIComponent(req.query[i]) + '|';
 		}
 	};
 	data = data.replace(/(\|)$/, '');
@@ -103,7 +103,7 @@ function saveData(req, res,name){
 	function write() {
 		fs.appendFile(name+'/' + project + '/' + year + '-' + month + '-' + day + '.txt', data + '\r\n', 'utf8', function() {});
 	}
-	res.send('{code:1,message:"成功"}');
+	res.send('');
 }
 function goHome(res) {
 	var projectsList = fs.readdirSync('allData/');

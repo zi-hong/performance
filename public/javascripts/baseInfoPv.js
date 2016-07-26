@@ -1,15 +1,15 @@
-var point = Vue.extend({
-	template: '#pointMain-template',
+var baseInfoPv = Vue.extend({
+	template: '#baseInfoPv-template',
 	components: {
 		'search': search,
-		'point-chart': pointChart,
+		'infopv-chart': baseInfoPvChart
 	},
 	data: function() {
 		return {
 			data: '',
 			showChart: false,
 			okFun: this.getData,
-			url: '/api/pointProjectList'
+			url: '/api/infoProjectList'
 		}
 	},
 	events: {
@@ -21,18 +21,17 @@ var point = Vue.extend({
 		getData: function(startTime, endTime, selName) {
 			var that = this;
 			if (!startTime || !endTime || !selName) {
-				alert('选择开始结束日期');
 				return;
 			}
 			that.$dispatch('showLoading');
 			$.ajax({
-				url: '/api/pointData',
+				url: '/api/infoPv',
 				data: {
 					project: selName,
 					startTime: startTime,
 					endTime: endTime
 				},
-				complete:function(){
+				complete: function() {
 					that.$dispatch('hideLoading');
 				},
 				success: function(msg) {

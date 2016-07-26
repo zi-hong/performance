@@ -220,7 +220,7 @@ function getInfoPvData(data) {
 	var result = {};
 	for (var i = 0; i < list.length - 1; i++) {
 		var pageName = list[i].match(/(^|\|)page\=([^|]*)/);
-		if (!pageName[2]) {
+		if (!pageName || !pageName[2]) {
 			continue;
 		}
 		var name=decodeURIComponent(pageName[2]);

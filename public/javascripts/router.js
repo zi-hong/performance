@@ -31,5 +31,9 @@ router.map({
     '/platform':{
         component:platform,
         platform:true
+    },
+    '/constant':{
+        component:constant,
+        constant:true
     }
 })

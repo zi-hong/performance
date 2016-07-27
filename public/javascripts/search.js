@@ -15,6 +15,9 @@ var search = Vue.extend({
 		},
 		url: {
 			type: String
+		},
+		onetime:{
+			type: Boolean
 		}
 	},
 	ready: function() {
@@ -43,7 +46,11 @@ var search = Vue.extend({
 			})
 		},
 		getData: function() {
-			this.okfun(this.startTime, this.endTime, this.selName);
+			if(this.onetime){
+				this.okfun(this.startTime, this.selName);
+			}else{
+				this.okfun(this.startTime, this.endTime, this.selName);
+			}
 		}
 	}
 })

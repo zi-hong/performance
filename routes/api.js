@@ -101,7 +101,6 @@ router.get('/dayData', function(req, res, next) {
 			var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
 			var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
 			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
-			console.log(path);
 			if (!fs.existsSync(path)) {
 				res.send({
 					code: 0
@@ -112,7 +111,6 @@ router.get('/dayData', function(req, res, next) {
 				'encoding': 'utf8'
 			});
 			data = getDayData(data);
-			console.log(data);
 			res.send({
 				code: 1,
 				data: data
@@ -308,7 +306,6 @@ function getDayData(data) {
 			continue;
 		}
 		pageName = decodeURIComponent(pageName[2]);
-		console.log(time[2]);
 		var d = new Date(parseInt(time[2]));
 		hour = d.getHours();
 		if (result[pageName]) {

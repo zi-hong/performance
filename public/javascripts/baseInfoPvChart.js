@@ -47,6 +47,57 @@ var baseInfoPvChart = Vue.extend({
 			this.pages = a;
 			this.selPage = this.pages[0];
 			this.showChartFun(this.pages[0], initData);
+			this.showAll(initData);
+		},
+		showAll: function(data) {
+			var myChart = echarts.init(document.getElementById('allNumber'));
+			var date = [];
+			var dataR = [];
+			for (var i = 0; i < data.length; i++) {
+				var number = 0;
+				date.push(data[i].date);
+				for (var j in data[i].data) {
+					number += data[i].data[j];
+				}
+				dataR.push(number);
+			}
+			option = {
+				tooltip: {
+					trigger: 'axis'
+				},
+				toolbox: {
+					show: true,
+					feature: {
+						mark: {
+							show: true
+						},
+						dataView: {
+							show: true,
+							readOnly: false
+						},
+						saveAsImage: {
+							show: true
+						}
+					}
+				},
+				legend: {
+					data: ['总访问量']
+				},
+				xAxis: [{
+					type: 'category',
+					data: date
+				}],
+				yAxis: [{
+					type: 'value'
+				}],
+				series: [{
+					name: '总访问量',
+					type: 'bar',
+					barMaxWidth: 30,
+					data: dataR
+				}]
+			};
+			myChart.setOption(option);
 		},
 		showChartFun: function(val, data) {
 
@@ -78,7 +129,7 @@ var baseInfoPvChart = Vue.extend({
 					}
 				},
 				legend: {
-					data: ['访问次数']
+					data: ['单页面访问量']
 				},
 				xAxis: [{
 					type: 'category',
@@ -88,7 +139,7 @@ var baseInfoPvChart = Vue.extend({
 					type: 'value'
 				}],
 				series: [{
-					name: '访问次数',
+					name: '访问量',
 					type: 'bar',
 					barMaxWidth: 30,
 					data: dataR

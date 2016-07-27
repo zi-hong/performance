@@ -43,16 +43,16 @@ var constantChart = Vue.extend({
 		showAll: function(data) {
 			var myChart = echarts.init(document.getElementById('allNumber'));
 			var date = [];
-			
+
 			var dataR = {};
 			for (var i in data) {
 				for (var h in data[i]) {
-					dataR[h] ? dataR[h]++ : dataR[h] = 1;
+					dataR[h] ? dataR[h] += data[i][h] : dataR[h] = data[i][h];
 				}
 			}
-			var data=[];
-			for(var j in dataR){
-				date.push(j);
+			var data = [];
+			for (var j in dataR) {
+				date.push(j + '时');
 				data.push(dataR[j]);
 			}
 			option = {

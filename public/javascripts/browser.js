@@ -1,4 +1,4 @@
-var platform = Vue.extend({
+var browser = Vue.extend({
 	template: '#platform-template',
 	components: {
 		'search': search
@@ -24,7 +24,7 @@ var platform = Vue.extend({
 			}
 			that.$dispatch('showLoading');
 			$.ajax({
-				url: '/api/platform',
+				url: '/api/browser',
 				data: {
 					project: selName,
 					startTime: startTime,

@@ -135,9 +135,47 @@ router.get('/infoPv', function(req, res, next) {
 			data: dataList
 		});
 	})
-/*基本信息统计--使用平台统计*/
-router.get('/platform',function(req, res, next){
-	var project = req.query.project;
+	/*浏览器数据*/
+router.get('/browser', function(req, res, next) {
+		var project = req.query.project;
+		var startTime = req.query.startTime;
+		var endTime = req.query.endTime;
+		var startTime_date = new Date(startTime + ' 00:00');
+		var startTime_time = startTime_date.getTime();
+
+		var endTime_date = new Date(endTime + ' 00:00');
+		var endTime_time = endTime_date.getTime();
+		var dataList = [];
+		if (fs.existsSync('infoData/' + project)) {
+			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+				var d = new Date(i);
+				var year = d.getFullYear();
+				var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
+				var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
+				var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
+				if (!fs.existsSync(path)) {
+					continue;
+				}
+				var data = fs.readFileSync(path, {
+					'encoding': 'utf8'
+				});
+				data = getBrowserData(data);
+				if (data) {
+					dataList.push({
+						date: year + '-' + mouth + '-' + day,
+						data: data
+					});
+				}
+			}
+		}
+		res.send({
+			code: 1,
+			data: dataList
+		});
+	})
+	/*基本信息统计--使用平台统计*/
+router.get('/platform', function(req, res, next) {
+		var project = req.query.project;
 		var startTime = req.query.startTime;
 		var endTime = req.query.endTime;
 		var startTime_date = new Date(startTime + ' 00:00');
@@ -172,21 +210,41 @@ router.get('/platform',function(req, res, next){
 			code: 1,
 			data: dataList
 		});
-})
-/*基本信息统计--平台*/
-function getPlatformData(data){
+	})
+function getBrowserData(data){
 	if (!data) {
 		return;
 	}
 	var list = data.split('\r\n');
 	var result = {};
 	for (var i = 0; i < list.length - 1; i++) {
-		
+		var browser = list[i].match(/(^|\|)browser\=([^|]*)/i);
+		if (!browser || !browser[2]) {
+			continue;
+		}
+		var name = browser[2];
+		if (result[name]) {
+			result[name]++;
+		} else {
+			result[name] = 1;
+		}
+	}
+	return result;
+}
+	/*基本信息统计--平台*/
+function getPlatformData(data) {
+	if (!data) {
+		return;
+	}
+	var list = data.split('\r\n');
+	var result = {};
+	for (var i = 0; i < list.length - 1; i++) {
+
 		var os = list[i].match(/(^|\|)os\=([^|]*)/);
 		if (!os || !os[2]) {
 			continue;
 		}
-		var name=os[2];
+		var name = os[2];
 		if (result[name]) {
 			result[name]++;
 		} else {
@@ -223,7 +281,7 @@ function getInfoPvData(data) {
 		if (!pageName || !pageName[2]) {
 			continue;
 		}
-		var name=decodeURIComponent(pageName[2]);
+		var name = decodeURIComponent(pageName[2]);
 		if (result[name]) {
 			result[name]++;
 		} else {

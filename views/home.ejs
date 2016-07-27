@@ -32,6 +32,7 @@
 	<script type='text/javascript' src='javascripts/baseInfoPv.js'></script>
 
 	<script type='text/javascript' src='javascripts/platform.js'></script>
+	<script type='text/javascript' src='javascripts/browser.js'></script>
 
 	<script type="text/javascript" src='javascripts/router.js'></script>
 </head>
@@ -46,6 +47,7 @@
 				<li v-link="{ path: '/point' }" v-bind:class="{ 'active': $route.point}" >埋点统计</li>
 				<li v-link="{ path: '/baseInfoPv' }" v-bind:class="{ 'active': $route.baseInfoPv}" >基本统计-pv</li>
 				<li v-link="{ path: '/platform' }" v-bind:class="{ 'active': $route.platform}" >基本统计-平台类型</li>
+				<li v-link="{ path: '/browser' }" v-bind:class="{ 'active': $route.browser}" >基本统计-浏览器类型</li>
 			</ul>
 		</div>
 		<div class='page-right'>
@@ -178,6 +180,12 @@
 </script>
 
 <script type='x/template' id='platform-template'>
+	<search v-bind:okfun='okFun' v-bind:url='url'></search>
+	<div id='pvchart-main'>
+		
+	</div>
+</script>
+<script type='x/template' id='browser-template'>
 	<search v-bind:okfun='okFun' v-bind:url='url'></search>
 	<div id='pvchart-main'>
 		

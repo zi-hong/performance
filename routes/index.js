@@ -89,13 +89,15 @@ function saveData(req, res, name) {
 			data += i + '=' + decodeURIComponent(req.query[i]) + '|';
 		}
 	};
-	if (name == 'infoData') {
-		var ip = getClientIp(req);
-
-		if (filterIp(ip)) {
-			console.log('ip='+ip);
+	var ip = getClientIp(req);
+	if (filterIp(ip)) {
+		if (name == 'infoData') {
+			console.log('ip=' + ip);
 			data += 'ip=' + ip + '|';
 		}
+	} else {
+		res.send('');
+		return;
 	}
 	data = data.replace(/(\|)$/, '');
 	var d = new Date();

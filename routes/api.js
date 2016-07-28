@@ -252,6 +252,10 @@ function getBrowserData(data) {
 			continue;
 		}
 		var name = browser[2];
+		console.log(name);
+		if (name != '58app' && name != 'uc' && name != 'qqbrowser') {
+			name = 'others';
+		}
 		if (result[name]) {
 			result[name]++;
 		} else {

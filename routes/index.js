@@ -85,10 +85,21 @@ function saveData(req, res, name) {
 	var project = req.query.project;
 	var data = '';
 	for (var i in req.query) {
+		var from = '';
+		if (i == 'page') {
+			var page = decodeURIComponent(req.query[i].split('?')[1]) || '';
+			from = /(from=\w*)/.exec(page);
+			if (from) {
+				from = from[0];
+			}
+			req.query[i] = from ? req.query[i].split('?')[0] + '?' + from : req.query[i].split('?')[0];
+			console.log(req.query[i]);
+		}
 		if (i != 'project') {
 			data += i + '=' + decodeURIComponent(req.query[i]) + '|';
 		}
 	};
+
 	var ip = getClientIp(req);
 	if (filterIp(ip)) {
 		if (name == 'infoData') {

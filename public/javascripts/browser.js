@@ -51,7 +51,7 @@ var browser = Vue.extend({
 			for (var j = 0; j < initData.length; j++) {
 				date.push(initData[j].date);
 				for (var n in initData[j].data) {
-					data[n] ? data[n]++ : data[n] = 1;
+					data[n] ? data[n]+=initData[j].data[n] : data[n] = initData[j].data[n];
 				}
 			}
 			var r=[];

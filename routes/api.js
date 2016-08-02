@@ -308,7 +308,7 @@ function getDayData(data) {
 		if (!pageName || !pageName[2] || !time || !time[2]) {
 			continue;
 		}
-		pageName = decodeURIComponent(pageName[2]);
+		pageName = decodeURIComponent(pageName[2]).replace(/(\/*(\?|#).*)$/g,'');
 		var d = new Date(parseInt(time[2]));
 		hour = d.getHours();
 		if (result[pageName]) {
@@ -351,7 +351,7 @@ function getInfoPvData(data) {
 		if (!pageName || !pageName[2]) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]);
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*(\?|#).*)$/g,'');
 		if (result[name]) {
 			result[name]++;
 		} else {
@@ -388,7 +388,7 @@ function getBaseData(data) {
 			rowObj[row[i].split('=')[0]] = row[i].split('=')[1];
 		}
 		var isHas = false; //标记是否已添加
-		rowObj.page = decodeURIComponent(rowObj.page);
+		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*(\?|#).*)$/g,'');
 		if (result[rowObj.page]) {
 			for (var k = 0; k < result[rowObj.page].length; k++) {
 				if (result[rowObj.page][k].tid == rowObj.tid) {

@@ -85,17 +85,6 @@ function saveData(req, res, name) {
 	var project = req.query.project;
 	var data = '';
 	for (var i in req.query) {
-		var from = '';
-		if (i == 'page' || i='referrer') {
-			var url=decodeURIComponent(req.query[i]);
-			var page = url.split('?')[1] || '';
-			from = /(from=\w*)/.exec(page);
-			if (from) {
-				from = from[0];
-			}
-			req.query[i] = (from ? url.split('?')[0] + '?' + from : url.split('?')[0]).replace(/\/$/,'');
-			console.log(req.query[i]);
-		}
 		if (i != 'project') {
 			data += i + '=' + decodeURIComponent(req.query[i]) + '|';
 		}

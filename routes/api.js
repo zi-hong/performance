@@ -252,7 +252,7 @@ function getBrowserData(data) {
 			continue;
 		}
 		var name = browser[2];
-		if (name != '58app' && name != 'uc' && name != 'qqbrowser') {
+		if (name != '58app' && name != 'uc' && name != 'qqbrowser' && name != 'wx') {
 			name = 'others';
 		}
 		if (result[name]) {
@@ -308,7 +308,7 @@ function getDayData(data) {
 		if (!pageName || !pageName[2] || !time || !time[2]) {
 			continue;
 		}
-		pageName = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g,'');
+		pageName = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '');
 		var d = new Date(parseInt(time[2]));
 		hour = d.getHours();
 		if (result[pageName]) {
@@ -351,7 +351,7 @@ function getInfoPvData(data) {
 		if (!pageName || !pageName[2]) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g,'');
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '');
 		if (result[name]) {
 			result[name]++;
 		} else {
@@ -362,6 +362,7 @@ function getInfoPvData(data) {
 }
 /*获得数据*/
 function getBaseData(data) {
+	console.log(data);
 	if (!data) {
 		return;
 	}
@@ -369,13 +370,29 @@ function getBaseData(data) {
 	/*
 	{
 		pagename1: [{
-				tid: 12,
-				number: 123
+				tid: 1,
+				user:{
+					A:1,
+					B:2
+				},
+				number:1
+			},
+			{
+				tid: 2,
+				user:{
+					A:1,
+					B:2
+				},
+				number:1
 			}
 		],
 		pagename2: [{
 				tid: 12,
-				number: 123
+				user:{
+					A:1,
+					B:2
+				},
+				number:12
 			}
 		]
 	}
@@ -388,25 +405,35 @@ function getBaseData(data) {
 			rowObj[row[i].split('=')[0]] = row[i].split('=')[1];
 		}
 		var isHas = false; //标记是否已添加
-		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g,'');
+		var obj = null;
+		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '');
+
 		if (result[rowObj.page]) {
 			for (var k = 0; k < result[rowObj.page].length; k++) {
 				if (result[rowObj.page][k].tid == rowObj.tid) {
 					isHas = true;
 					result[rowObj.page][k].number++;
+					result[rowObj.page][k].user.length++;
+					result[rowObj.page][k].user[rowObj.uid]?result[rowObj.page][k].user[rowObj.uid]++:result[rowObj.page][k].user[rowObj.uid]=1
 				}
 			}
 			if (!isHas) {
-				result[rowObj.page].push({
+				obj = {
 					tid: rowObj.tid,
-					number: 1
-				});
+					number: 1,
+					user:{length:1}
+				};
+				obj.user[rowObj.uid] = 1
+				result[rowObj.page].push(obj);
 			}
 		} else {
-			result[rowObj.page] = [{
+			obj = {
 				tid: rowObj.tid,
-				number: 1
-			}];
+				number: 1,
+				user:{length:1}
+			};
+			obj.user[rowObj.uid] = 1
+			result[rowObj.page] = [obj];
 		}
 	}
 	return result;

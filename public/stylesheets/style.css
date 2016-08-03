@@ -173,3 +173,9 @@ ul,li{margin:0px;padding: 0px;}
 .hide{
     display: none;
 }
+.people{
+    font-size: 20px;
+    margin-top: 20px;
+    margin-left:32%;
+    margin-bottom: 10px;
+}

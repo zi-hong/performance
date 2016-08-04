@@ -35,5 +35,9 @@ router.map({
     '/constant':{
         component:constant,
         constant:true
+    },
+    '/perform':{
+        component:perform,
+        perform:true
     }
 })

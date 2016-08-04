@@ -57,19 +57,18 @@ router.get('/pointData', function(req, res, next) {
 		var startTime = req.query.startTime;
 		var endTime = req.query.endTime;
 
-		var startTime_date = new Date(startTime + ' 00:00');
-		var startTime_time = startTime_date.getTime();
-
-		var endTime_date = new Date(endTime + ' 00:00');
-		var endTime_time = endTime_date.getTime();
+		var startTime_time = getTimeByDate(startTime);
+		var endTime_time = getTimeByDate(endTime);
 
 		var dataList = [];
 		if (fs.existsSync('traceData/' + project)) {
 			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-				var d = new Date(i);
-				var year = d.getFullYear();
-				var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
-				var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
+				
+				var o = getTimePathByDate(i)
+				var year =o.year;
+				var mouth = o.mouth;
+				var day = o.day;
+
 				var path = 'traceData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
 				if (!fs.existsSync(path)) {
 					continue;
@@ -130,18 +129,19 @@ router.get('/infoPv', function(req, res, next) {
 		var project = req.query.project;
 		var startTime = req.query.startTime;
 		var endTime = req.query.endTime;
-		var startTime_date = new Date(startTime + ' 00:00');
-		var startTime_time = startTime_date.getTime();
 
-		var endTime_date = new Date(endTime + ' 00:00');
-		var endTime_time = endTime_date.getTime();
+		var startTime_time = getTimeByDate(startTime);
+		var endTime_time = getTimeByDate(endTime);
+
 		var dataList = [];
 		if (fs.existsSync('infoData/' + project)) {
 			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-				var d = new Date(i);
-				var year = d.getFullYear();
-				var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
-				var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
+				
+				var o = getTimePathByDate(i)
+				var year =o.year;
+				var mouth = o.mouth;
+				var day = o.day;
+
 				var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
 				if (!fs.existsSync(path)) {
 					continue;
@@ -168,18 +168,20 @@ router.get('/browser', function(req, res, next) {
 		var project = req.query.project;
 		var startTime = req.query.startTime;
 		var endTime = req.query.endTime;
-		var startTime_date = new Date(startTime + ' 00:00');
-		var startTime_time = startTime_date.getTime();
 
-		var endTime_date = new Date(endTime + ' 00:00');
-		var endTime_time = endTime_date.getTime();
+		var startTime_time = getTimeByDate(startTime);
+		var endTime_time = getTimeByDate(endTime);
+
 		var dataList = [];
 		if (fs.existsSync('infoData/' + project)) {
 			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-				var d = new Date(i);
-				var year = d.getFullYear();
-				var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
-				var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
+
+				var o = getTimePathByDate(i)
+
+				var year =o.year;
+				var mouth = o.mouth;
+				var day = o.day;
+
 				var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
 				if (!fs.existsSync(path)) {
 					continue;
@@ -206,19 +208,18 @@ router.get('/platform', function(req, res, next) {
 	var project = req.query.project;
 	var startTime = req.query.startTime;
 	var endTime = req.query.endTime;
-	var startTime_date = new Date(startTime + ' 00:00');
-	var startTime_time = startTime_date.getTime();
 
-	var endTime_date = new Date(endTime + ' 00:00');
-	var endTime_time = endTime_date.getTime();
+	var startTime_time = getTimeByDate(startTime);
+	var endTime_time = getTimeByDate(endTime);
+
 	var dataList = [];
 	if (fs.existsSync('infoData/' + project)) {
 		for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-			var d = new Date(i);
-			var year = d.getFullYear();
-			var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
-			var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
-			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
+			var o = getTimePathByDate(i)
+			var year = o.year;
+			var mouth = o.mouth;
+			var day = o.day;
+			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
 			if (!fs.existsSync(path)) {
 				continue;
 			}
@@ -239,6 +240,99 @@ router.get('/platform', function(req, res, next) {
 		data: dataList
 	});
 })
+router.get('/performance', function(req, res, next) {
+	var project = req.query.project;
+	var startTime = req.query.startTime;
+	var endTime = req.query.endTime;
+
+	var startTime_time = getTimeByDate(startTime);
+	var endTime_time = getTimeByDate(endTime);
+	var dataList = [];
+	if (fs.existsSync('infoData/' + project)) {
+		for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+			var o = getTimePathByDate(i)
+			var year = o.year;
+			var mouth = o.mouth;
+			var day = o.day;
+			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
+			if (!fs.existsSync(path)) {
+				continue;
+			}
+			var data = fs.readFileSync(path, {
+				'encoding': 'utf8'
+			});
+
+			data = getPerformance(data);
+			if (data) {
+				dataList.push({
+					date: year + '-' + mouth + '-' + day,
+					data: data
+				});
+			}
+		}
+	}
+	res.send({
+		code: 1,
+		data: dataList
+	});
+})
+
+function getPerformance(data) {
+	if (!data) {
+		return;
+	}
+	var list = data.split('\r\n');
+	var result = {};
+	for (var j = 0; j < list.length - 1; j++) {
+		var rowObj = {};
+		var rows = list[j].split('|');
+		for (var h = 0; h < rows.length; h++) {
+			if (rows[h]) {
+				rowObj[rows[h].split('=')[0]] = rows[h].split('=')[1]
+			}
+		}
+
+		if (result[rowObj.page]) {
+			result[rowObj.page].dns += parseInt(rowObj.dns);
+			result[rowObj.page].conn += parseInt(rowObj.conn);
+			result[rowObj.page].req += parseInt(rowObj.req);
+			result[rowObj.page].res += parseInt(rowObj.res);
+			result[rowObj.page].rt += parseInt(rowObj.rt);
+			result[rowObj.page].intr += parseInt(rowObj.intr);
+			result[rowObj.page].length++;
+		} else {
+			result[rowObj.page] = {
+				dns: parseInt(rowObj.dns || 0),
+				conn: parseInt(rowObj.conn || 0),
+				req: parseInt(rowObj.req || 0),
+				res: parseInt(rowObj.res || 0),
+				rt: parseInt(rowObj.rt || 0),
+				intr: parseInt(rowObj.intr || 0),
+				length: 1
+			}
+		}
+		console.log(result);
+	}
+	return result;
+}
+
+function getTimePathByDate(date) {
+	var d = new Date(date);
+	var year = d.getFullYear();
+	var mouth = (parseInt(1 + d.getMonth()) + '').length > 1 ? parseInt(1 + d.getMonth()) : '0' + parseInt(1 + d.getMonth());
+	var day = (d.getDate() + '').length > 1 ? d.getDate() : '0' + d.getDate();
+	return {
+		year: year,
+		mouth: mouth,
+		day: day
+	};
+}
+
+function getTimeByDate(dateStr) { //2016-08-09
+	var date = new Date(dateStr + ' 00:00');
+	var time = date.getTime();
+	return time;
+}
 
 function getBrowserData(data) {
 	if (!data) {
@@ -271,7 +365,6 @@ function getPlatformData(data) {
 	var list = data.split('\r\n');
 	var result = {};
 	for (var i = 0; i < list.length - 1; i++) {
-
 		var os = list[i].match(/(^|\|)os\=([^|]*)/);
 		if (!os || !os[2]) {
 			continue;
@@ -448,9 +541,9 @@ function getBaseData(data) {
 	}
 	for (var h in result) {
 		for (var m = 0; m < result[h].length; m++) {
-			for(var n in result[h][m].user){
+			for (var n in result[h][m].user) {
 				console.log(n);
-				if(n != 'length'){
+				if (n != 'length') {
 					delete result[h][m].user[n];
 				}
 			}

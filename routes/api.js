@@ -292,6 +292,9 @@ function getPerformance(data) {
 			}
 		}
 		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		if(rowObj.res.length>=5 || rowObj.rt.length>=5){
+			continue;
+		}
 
 		if (result[rowObj.page]) {
 			result[rowObj.page].dns += parseInt(rowObj.dns || 0);

@@ -31,17 +31,18 @@ var perform = Vue.extend({
 					startTime: startTime,
 					endTime: endTime
 				},
+				complete:function(){
+					that.$dispatch('hideLoading');
+				},
 				success: function(msg) {
 					if (msg.code == 1) {
 						that.$broadcast('showChartCon', msg.data);
 					} else {
 						alert('查找失败');
-						that.$dispatch('hideLoading');
 					}
 				},
 				erroe: function() {
 					alert('查找失败');
-					that.$dispatch('hideLoading');
 				}
 			})
 		}

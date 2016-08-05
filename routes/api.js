@@ -291,15 +291,15 @@ function getPerformance(data) {
 				rowObj[rows[h].split('=')[0]] = rows[h].split('=')[1]
 			}
 		}
-		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '');
+		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 
 		if (result[rowObj.page]) {
-			result[rowObj.page].dns += parseInt(rowObj.dns);
-			result[rowObj.page].conn += parseInt(rowObj.conn);
-			result[rowObj.page].req += parseInt(rowObj.req);
-			result[rowObj.page].res += parseInt(rowObj.res);
-			result[rowObj.page].rt += parseInt(rowObj.rt);
-			result[rowObj.page].intr += parseInt(rowObj.intr);
+			result[rowObj.page].dns += parseInt(rowObj.dns || 0);
+			result[rowObj.page].conn += parseInt(rowObj.conn || 0);
+			result[rowObj.page].req += parseInt(rowObj.req || 0);
+			result[rowObj.page].res += parseInt(rowObj.res || 0);
+			result[rowObj.page].rt += parseInt(rowObj.rt || 0);
+			result[rowObj.page].intr += parseInt(rowObj.intr || 0);
 			result[rowObj.page].length++;
 		} else {
 			result[rowObj.page] = {
@@ -312,7 +312,6 @@ function getPerformance(data) {
 				length: 1
 			}
 		}
-		console.log(result);
 	}
 	return result;
 }
@@ -402,7 +401,7 @@ function getDayData(data) {
 		if (!pageName || !pageName[2] || !time || !time[2]) {
 			continue;
 		}
-		pageName = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '');
+		pageName = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
 		var d = new Date(parseInt(time[2]));
 		hour = d.getHours();
 		if (result[pageName]) {
@@ -445,7 +444,7 @@ function getInfoPvData(data) {
 		if (!pageName || !pageName[2]) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '');
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
 		if (result[name]) {
 			result[name]++;
 		} else {
@@ -502,7 +501,7 @@ function getBaseData(data) {
 		}
 		var isHas = false; //标记是否已添加
 		var obj = null;
-		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '');
+		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
 
 		if (result[rowObj.page]) {
 			for (var k = 0; k < result[rowObj.page].length; k++) {

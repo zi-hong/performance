@@ -59,12 +59,12 @@ var performChart = Vue.extend({
 			var intr = [];
 			for (var j = 0; j < initData.length; j++) {
 				date.push(initData[j].date);
-				dns.push(initData[j].data[page] ? initData[j].data[page].dns/initData[j].data[page].length : 0);
-				conn.push(initData[j].data[page] ? initData[j].data[page].conn/initData[j].data[page].length : 0);
-				req.push(initData[j].data[page] ? initData[j].data[page].req/initData[j].data[page].length : 0);
-				res.push(initData[j].data[page] ? initData[j].data[page].res/initData[j].data[page].length : 0);
-				tr.push(initData[j].data[page] ? initData[j].data[page].tr/initData[j].data[page].length : 0);
-				intr.push(initData[j].data[page] ? initData[j].data[page].intr/initData[j].data[page].length : 0);
+				dns.push(initData[j].data[page] ? parseInt(initData[j].data[page].dns/initData[j].data[page].length) : 0);
+				conn.push(initData[j].data[page] ? parseInt(initData[j].data[page].conn/initData[j].data[page].length) : 0);
+				req.push(initData[j].data[page] ? parseInt(initData[j].data[page].req/initData[j].data[page].length) : 0);
+				res.push(initData[j].data[page] ? parseInt(initData[j].data[page].res/initData[j].data[page].length) : 0);
+				tr.push(initData[j].data[page] ? parseInt(initData[j].data[page].tr/initData[j].data[page].length) : 0);
+				intr.push(initData[j].data[page] ? parseInt(initData[j].data[page].intr/initData[j].data[page].length) : 0);
 			}
 			var myChart = echarts.init(document.getElementById('chartMian'));
 			option = {

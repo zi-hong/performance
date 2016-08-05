@@ -291,11 +291,11 @@ function getPerformance(data) {
 				rowObj[rows[h].split('=')[0]] = rows[h].split('=')[1]
 			}
 		}
-		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '') || '/';
-		if(rowObj.res.length>=5 || rowObj.rt.length>=5){
+		
+		if((rowObj.res+'').length>=5 || (rowObj.rt+'').length>=5){
 			continue;
 		}
-
+		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		if (result[rowObj.page]) {
 			result[rowObj.page].dns += parseInt(rowObj.dns || 0);
 			result[rowObj.page].conn += parseInt(rowObj.conn || 0);

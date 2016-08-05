@@ -291,6 +291,7 @@ function getPerformance(data) {
 				rowObj[rows[h].split('=')[0]] = rows[h].split('=')[1]
 			}
 		}
+		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '');
 
 		if (result[rowObj.page]) {
 			result[rowObj.page].dns += parseInt(rowObj.dns);

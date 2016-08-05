@@ -23,6 +23,7 @@ var perform = Vue.extend({
 			if (!startTime || !endTime || !selName) {
 				return;
 			}
+			that.$dispatch('showLoading');
 			$.ajax({
 				url: '/api/performance',
 				data: {

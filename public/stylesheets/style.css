@@ -168,7 +168,7 @@ ul,li{margin:0px;padding: 0px;}
     width: 80%;
     height:400px;
 }
-#pvchart-main,#allNumber{
+#pvchart-main,#allNumber,#browser-main{
     width: 80%;
     height:400px;
     margin-top: 20px;

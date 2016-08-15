@@ -19,6 +19,9 @@
 
 	<script type="text/javascript" src='javascripts/loading.js'></script>
 	<script type="text/javascript" src='javascripts/search.js'></script>
+
+	<script type="text/javascript" src='javascripts/constantChart.js'></script>
+
 	<script type="text/javascript" src='javascripts/performanceChart.js'></script>
 	<script type="text/javascript" src='javascripts/pagesizeChart.js'></script>
 	<script type="text/javascript" src='javascripts/pv.js'></script>
@@ -28,17 +31,18 @@
 	<script type="text/javascript" src='javascripts/pointChart.js'></script>
 	<script type='text/javascript' src='javascripts/point.js'></script>
 
-	<script type='text/javascript' src='javascripts/baseInfoPvChart.js'></script>
 	<script type='text/javascript' src='javascripts/baseInfoPv.js'></script>
 
 	<script type='text/javascript' src='javascripts/platform.js'></script>
-	<script type='text/javascript' src='javascripts/browser.js'></script>
 
-	<script type="text/javascript" src='javascripts/constantChart.js'></script>
+	
 	<script type="text/javascript" src='javascripts/constant.js'></script>
 
-	<script type="text/javascript" src='javascripts/performChart.js'></script>
+	<script type='text/javascript' src='javascripts/browser.js'></script>
+
 	<script type="text/javascript" src='javascripts/perform.js'></script>
+
+	<script type='text/javascript' src='javascripts/custom.js'></script>
 
 	<script type="text/javascript" src='javascripts/router.js'></script>
 </head>
@@ -56,6 +60,7 @@
 				<li v-link="{ path: '/platform' }" v-bind:class="{ 'active': $route.platform}" >基初统计-平台类型</li>
 				<li v-link="{ path: '/browser' }" v-bind:class="{ 'active': $route.browser}" >基初统计-浏览器类型</li>
 				<li v-link="{ path: '/constant'}" v-bind:class="{ 'active': $route.constant}" >基初统计-实时数据</li>
+				<li v-link="{ path: '/custom'}" v-bind:class="{ 'active': $route.custom}" >基础统计-自定义</li>
 			</ul>
 		</div>
 		<div class='page-right'>
@@ -85,6 +90,10 @@
 	<div id='main'>
 		<performance-chart :show.sync="showChart"></performance-chart>
 	</div>
+</script>
+<script type='x/template' id='perform-template'>
+	<search v-bind:okfun='okFun' v-bind:url='url'></search>
+	<constant-chart :show.sync="showChart" ></constant-chart>
 </script>
 <script type="x/template" id='search-template'>
 	<form class='form-inline'>
@@ -187,8 +196,9 @@
 <script type='x/template' id='baseInfoPv-template'>
 	<search v-bind:okfun='okFun' v-bind:url='url'></search>
 	<div id='pvchart-main'>
-		<infopv-chart :show.sync="showChart"></infopv-chart>
+		
 	</div>
+	<constant-chart :show.sync="showChart" ></constant-chart>
 </script>
 
 <script type='x/template' id='platform-template'>
@@ -200,29 +210,42 @@
 </script>
 <script type='x/template' id='browser-template'>
 	<search v-bind:okfun='okFun' v-bind:url='url'></search>
-	<div id='pvchart-main'>
-		
+	<div id='pvchart-main'></div>
+	<div>
+		<constant-chart :show.sync="showChart" ></constant-chart>
 	</div>
 </script>
 <script type="text/template" id='constant-template'>
 	<search v-bind:okfun='okFun' v-bind:url='url' v-bind:onetime='oneTime'></search>
 	<div>
-		<constant-chart :show.sync="showChart"></constant-chart>
+		<div id='allNumber'></div>
+		<constant-chart :show.sync="showChart" ></constant-chart>
 	</div>
 </script>
 <script type='x/template' id='constantChart-template'>
 	<div class='chartCon' v-show="show">
-		<div id='allNumber'></div>
 		<div  class='form-group'>
 		<form class='form-inline'>
 			<label class="form-label">页面</label>
-			<select v-model='selPage' class="form-control">
-				<option v-for='page in pages'>{{page}}</option>
+			<select class="form-control" v-model='currentPage'>
+				<option v-for='page in selPages'>{{page}}</option>
 			</select>
 		</form>
 		</div>
 		<div id='pointMian'></div>
 	</div>
+</script>
+<script type='x/template' id='custom-template'>
+	<search v-bind:okfun='okFun' v-bind:url='url'></search>
+	<form class='form-inline' style='margin-top:20px' v-show='show'>
+		<label class="form-label">页面</label>
+		<select class="form-control" v-model='currentPage'>
+			<option v-for='page in pageList' track-by="$index">{{page}}</option>
+		</select>
+		<input class="form-control" v-model='filterStr' type='text' placeholder='过滤参数 例：from=aa' />
+		<input @click="search" class="btn btn-primary" type='button' value='查询' />
+	</form>
+	<div id='chartMian'></div>
 </script>
 <script type="text/javascript" src='javascripts/home.js'></script>
 </html>

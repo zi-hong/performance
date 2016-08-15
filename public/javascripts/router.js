@@ -39,5 +39,9 @@ router.map({
     '/perform':{
         component:perform,
         perform:true
+    },
+    '/custom':{
+        component:custom,
+        custom:true
     }
 })

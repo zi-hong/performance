@@ -63,9 +63,9 @@ router.get('/pointData', function(req, res, next) {
 		var dataList = [];
 		if (fs.existsSync('traceData/' + project)) {
 			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-				
+
 				var o = getTimePathByDate(i)
-				var year =o.year;
+				var year = o.year;
 				var mouth = o.mouth;
 				var day = o.day;
 
@@ -136,9 +136,9 @@ router.get('/infoPv', function(req, res, next) {
 		var dataList = [];
 		if (fs.existsSync('infoData/' + project)) {
 			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-				
+
 				var o = getTimePathByDate(i)
-				var year =o.year;
+				var year = o.year;
 				var mouth = o.mouth;
 				var day = o.day;
 
@@ -178,7 +178,7 @@ router.get('/browser', function(req, res, next) {
 
 				var o = getTimePathByDate(i)
 
-				var year =o.year;
+				var year = o.year;
 				var mouth = o.mouth;
 				var day = o.day;
 
@@ -276,6 +276,119 @@ router.get('/performance', function(req, res, next) {
 		data: dataList
 	});
 })
+router.get('/pageList', function(req, res, next) {
+	var project = req.query.project;
+	var startTime = req.query.startTime;
+	var endTime = req.query.endTime;
+	var startTime_time = getTimeByDate(startTime);
+	var endTime_time = getTimeByDate(endTime);
+	var dataList = [];
+	if (fs.existsSync('infoData/' + project)) {
+		for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+			var o = getTimePathByDate(i)
+			var year = o.year;
+			var mouth = o.mouth;
+			var day = o.day;
+			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
+			if (!fs.existsSync(path)) {
+				continue;
+			}
+			var data = fs.readFileSync(path, {
+				'encoding': 'utf8'
+			});
+
+			var d = getPageList(data);
+			dataList = dataList.concat(d);
+		}
+	}
+	var pages = dataList.filter(function(val, index) {
+		if (dataList.indexOf(val) == index) {
+			return true;
+		}
+		return false;
+	})
+	res.send({
+		code: 1,
+		data: pages
+	});
+})
+router.get('/customData', function(req, res, next) {
+	var project = req.query.project;
+	var startTime = req.query.startTime;
+	var endTime = req.query.endTime;
+	var startTime_time = getTimeByDate(startTime);
+	var endTime_time = getTimeByDate(endTime);
+	var page = req.query.page;
+	var filter = req.query.filter;
+	var dataList = [];
+	if (fs.existsSync('infoData/' + project)) {
+		for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+			var o = getTimePathByDate(i)
+			var year = o.year;
+			var mouth = o.mouth;
+			var day = o.day;
+			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
+			if (!fs.existsSync(path)) {
+				continue;
+			}
+			var data = fs.readFileSync(path, {
+				'encoding': 'utf8'
+			});
+
+			var d = getCustomData(data, page, filter);
+			if (d) {
+				dataList.push({
+					date: year + '-' + mouth + '-' + day,
+					data: d
+				});
+			}
+		}
+	}
+	res.send({
+		code: 1,
+		data: dataList
+	});
+})
+
+function getCustomData(data, page, filter) {
+	if (!data) {
+		return;
+	}
+	var list = data.split('\r\n');
+	var count = 0;
+	for (var j = 0; j < list.length - 1; j++) {
+		var pageName = list[j].match(/(^|\|)page\=([^|]*)/);
+		if (!pageName || !pageName[2]) {
+			continue;
+		}
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		var paramer = decodeURIComponent(pageName[2]).split('?');
+		var tamp = paramer[1] ? paramer[1].split('&') : '';
+		if (page == name && tamp.indexOf(filter) != -1) {
+			count++;
+		}
+	}
+	return count;
+}
+
+function getPageList(data) {
+	if (!data) {
+		return [];
+	}
+	var list = data.split('\r\n');
+	var result = [];
+	for (var j = 0; j < list.length - 1; j++) {
+		var pageName = list[j].match(/(^|\|)page\=([^|]*)/);
+		if (!pageName || !pageName[2]) {
+			continue;
+		}
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		if (result.indexOf(name) == -1) {
+			result.push(name);
+		}
+	}
+	return result;
+}
 
 function getPerformance(data) {
 	if (!data) {
@@ -291,8 +404,8 @@ function getPerformance(data) {
 				rowObj[rows[h].split('=')[0]] = rows[h].split('=')[1]
 			}
 		}
-		
-		if((rowObj.res+'').length>=5 || (rowObj.rt+'').length>=5){
+
+		if ((rowObj.res + '').length >= 5 || (rowObj.rt + '').length >= 5) {
 			continue;
 		}
 		rowObj.page = decodeURIComponent(rowObj.page).replace(/(\/*((\?|#).*|$))/g, '') || '/';
@@ -343,19 +456,33 @@ function getBrowserData(data) {
 	}
 	var list = data.split('\r\n');
 	var result = {};
+	/*
+		{
+			page:{
+				58app:123,
+				uc:12
+			}
+		}
+	*/
 	for (var i = 0; i < list.length - 1; i++) {
 		var browser = list[i].match(/(^|\|)browser\=([^|]*)/i);
+		var page = list[i].match(/(^|\|)page\=([^|]*)/i);
 		if (!browser || !browser[2]) {
 			continue;
 		}
+		if (!page || !page[2]) {
+			continue;
+		}
+		page = decodeURIComponent(page[2]);
 		var name = browser[2];
 		if (name != '58app' && name != 'uc' && name != 'qqbrowser' && name != 'wx') {
 			name = 'others';
 		}
-		if (result[name]) {
-			result[name]++;
+		if (result[page]) {
+			result[page][name] ? result[page][name]++ : result[page][name] = 1;
 		} else {
-			result[name] = 1;
+			result[page] = {};
+			result[page][name] = 1;
 		}
 	}
 	return result;
@@ -447,7 +574,7 @@ function getInfoPvData(data) {
 		if (!pageName || !pageName[2]) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		if (result[name]) {
 			result[name]++;
 		} else {

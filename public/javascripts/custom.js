@@ -67,6 +67,7 @@ var custom = Vue.extend({
 		},
 		search: function() {
 			var that = this;
+			that.$dispatch('showLoading');
 			$.ajax({
 				url: '/api/customData',
 				data: {
@@ -76,6 +77,9 @@ var custom = Vue.extend({
 					page: that.currentPage,
 					filter: that.filterStr
 				},
+				complete:function(){
+					that.$dispatch('hideLoading');
+				}
 				success: function(msg) {
 					if (msg.code == 1) {
 						that.data = msg.data;

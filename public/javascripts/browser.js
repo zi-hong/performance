@@ -29,7 +29,7 @@ var browser = Vue.extend({
 			for (var m in r) {
 				a.push({
 					name: m,
-					value: data[m]
+					value: r[m]
 				});
 			}
 			option = {

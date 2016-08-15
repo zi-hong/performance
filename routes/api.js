@@ -473,7 +473,7 @@ function getBrowserData(data) {
 		if (!page || !page[2]) {
 			continue;
 		}
-		page = decodeURIComponent(page[2]);
+		page = decodeURIComponent(page[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		var name = browser[2];
 		if (name != '58app' && name != 'uc' && name != 'qqbrowser' && name != 'wx') {
 			name = 'others';

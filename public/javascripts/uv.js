@@ -110,9 +110,11 @@ var uv = Vue.extend({
 				var temp = {};
 				var number = 0;
 				for (var i in this.data[j]['data']) {
-					if (!temp[i]) {
-						temp[i] = 1;
-						number++;
+					for (var h in this.data[j]['data'][i]) {
+						if (!temp[h]) {
+							temp[h] = 1;
+							number++;
+						}
 					}
 				}
 				data.push(number);

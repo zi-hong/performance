@@ -2,9 +2,44 @@ var express = require('express');
 var router = express.Router();
 var isLogin = require('../dep/login');
 var getData = require('../getData');
+// var mongoose = require('mongoose');
+// var mongDBServer = require('../config/config').mongodb;
 var fs = require('fs');
 
 router.get('/', function(req, res, next) {
+	// var conn = mongoose.connect(mongDBServer + '/infoData');
+	// var Schema = mongoose.Schema;
+	// //骨架模版
+	// var movieSchema = new Schema({
+	// 		doctor: String,
+	// 		title: String,
+	// 		language: String,
+	// 		country: String,
+	// 		year: Number,
+	// 		summary: String,
+	// 		poster: String,
+	// 		flash: String
+	// 	})
+	// 	//模型
+	// var Movie = mongoose.model('Movie', movieSchema);
+	// //存储数据
+	// var moive = new Movie({
+	// 		title: '黑衣人三',
+	// 		doctor: '史密斯',
+	// 		year: 2018,
+	// 		flash: 'http://player.youku.com/player.php/sid/XNjA1Njc0NTUy/v.swf',
+	// 		country: '美国',
+	// 		language: '英语',
+	// 		summary: '好片'
+	// 	})
+	// 	//保存数据库
+	// moive.save(function(err) {
+	// 	if (err) {
+	// 		console.log('保存失败')
+	// 		return;
+	// 	}
+	// 	console.log('meow');
+	// });
 	res.send('api');
 });
 /*性能分析获取项目名*/
@@ -400,19 +435,15 @@ function getUvData(data) {
 		}
 	*/
 	for (var j = 0; j < list.length - 1; j++) {
-		var pageName = list[j].match(/(^|\|)page\=([^|]*)/);
-		var uid = list[j].match(/(^|\|)uid\=([^|]*)/);
-		if (!pageName || !pageName[2]) {
+		var pageName = getParamer(list[j], 'page');
+		var uid = getParamer(list[j], 'uid');
+		if (!pageName || !uid) {
 			continue;
 		}
-		if (!uid || !uid[2]) {
-			continue;
-		}
-		uid = uid[2];
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		if (result[name]) {
 			if (result[name][uid]) {
-				
+
 				result[name][uid]++;
 
 			} else {
@@ -435,12 +466,12 @@ function getCustomData(data, page, filter) {
 	var list = data.split('\r\n');
 	var count = 0;
 	for (var j = 0; j < list.length - 1; j++) {
-		var pageName = list[j].match(/(^|\|)page\=([^|]*)/);
-		if (!pageName || !pageName[2]) {
+		var pageName = getParamer(list[j], 'page');
+		if (!pageName) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
-		var paramer = decodeURIComponent(pageName[2]).split('?');
+		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		var paramer = decodeURIComponent(pageName).split('?');
 		var tamp = paramer[1] ? paramer[1].split('&') : '';
 		if (page == name && tamp.indexOf(filter) != -1) {
 			count++;
@@ -456,11 +487,11 @@ function getPageList(data) {
 	var list = data.split('\r\n');
 	var result = [];
 	for (var j = 0; j < list.length - 1; j++) {
-		var pageName = list[j].match(/(^|\|)page\=([^|]*)/);
-		if (!pageName || !pageName[2]) {
+		var pageName = getParamer(list[j], 'page');
+		if (!pageName) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		if (result.indexOf(name) == -1) {
 			result.push(name);
 		}
@@ -522,6 +553,16 @@ function getTimePathByDate(date) {
 	};
 }
 
+function getParamer(listStr, paramer) {
+	var reg = new RegExp('(?:^|\|)' + paramer + '\=([^|]*)');
+	var name = listStr.match(reg);
+	if (!name || !name[1]) {
+		return '';
+	} else {
+		return name[1];
+	}
+}
+
 function getTimeByDate(dateStr) { //2016-08-09
 	var date = new Date(dateStr + ' 00:00');
 	var time = date.getTime();
@@ -543,16 +584,14 @@ function getBrowserData(data) {
 		}
 	*/
 	for (var i = 0; i < list.length - 1; i++) {
-		var browser = list[i].match(/(^|\|)browser\=([^|]*)/i);
-		var page = list[i].match(/(^|\|)page\=([^|]*)/i);
-		if (!browser || !browser[2]) {
+		var name = getParamer(list[i], 'browser');
+		var page = getParamer(list[i], 'page');
+		if (!name || !page) {
 			continue;
 		}
-		if (!page || !page[2]) {
-			continue;
-		}
-		page = decodeURIComponent(page[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
-		var name = browser[2];
+
+		page = decodeURIComponent(page).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+
 		if (name != '58app' && name != 'uc' && name != 'qqbrowser' && name != 'wx') {
 			name = 'others';
 		}
@@ -603,14 +642,15 @@ function getDayData(data) {
 	var list = data.split('\r\n');
 	var result = {};
 	for (var i = 0; i < list.length - 1; i++) {
-		var pageName = list[i].match(/(^|\|)page\=([^|]*)/);
-		var time = list[i].match(/(^|\|)\_\=([^|]*)/);
-		var hour = null;
-		if (!pageName || !pageName[2] || !time || !time[2]) {
+		var pageName = getParamer(list[i], 'page');
+		var time = getParamer(list[i], '_');
+		if (!pageName || !time) {
 			continue;
 		}
-		pageName = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
-		var d = new Date(parseInt(time[2]));
+
+		var hour = null;
+		pageName = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
+		var d = new Date(parseInt(time));
 		hour = d.getHours();
 		if (result[pageName]) {
 			if (result[pageName][hour]) {
@@ -648,11 +688,11 @@ function getInfoPvData(data) {
 	var list = data.split('\r\n');
 	var result = {};
 	for (var i = 0; i < list.length - 1; i++) {
-		var pageName = list[i].match(/(^|\|)page\=([^|]*)/);
-		if (!pageName || !pageName[2]) {
+		var pageName = getParamer(list[i], 'page');
+		if (!pageName) {
 			continue;
 		}
-		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		if (result[name]) {
 			result[name]++;
 		} else {
@@ -750,7 +790,6 @@ function getBaseData(data) {
 	for (var h in result) {
 		for (var m = 0; m < result[h].length; m++) {
 			for (var n in result[h][m].user) {
-				console.log(n);
 				if (n != 'length') {
 					delete result[h][m].user[n];
 				}

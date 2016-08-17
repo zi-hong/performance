@@ -29,21 +29,15 @@ var pagesizeChart = Vue.extend({
 	},
 	methods: {
 		formatData: function(initData) {
-			var pageList = {};
+			var pageList = [];
 			for (var j = 0; j < initData.length; j++) {
 				for (var i in initData[j].data) {
-					if (pageList[i]) {
-						pageList[i]++;
-					} else {
-						pageList[i] = 1;
+					if (pageList.indexOf(i) == -1) {
+						pageList.push(i);
 					}
 				}
 			}
-			var a = [];
-			for (var n in pageList) {
-				a.push(n);
-			}
-			this.pages = a;
+			this.pages = pageList;
 			this.selPage = this.pages[0];
 			this.showChartFun(this.pages[0], initData);
 		},

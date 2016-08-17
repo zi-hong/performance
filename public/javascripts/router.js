@@ -16,6 +16,10 @@ router.map({
     	component: pv,
         pv:true
     },
+    '/uv':{
+        component:uv,
+        uv:true
+    },
     '/point':{
         component: point,
         point:true

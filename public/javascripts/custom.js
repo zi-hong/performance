@@ -77,9 +77,9 @@ var custom = Vue.extend({
 					page: that.currentPage,
 					filter: that.filterStr
 				},
-				complete:function(){
+				complete: function() {
 					that.$dispatch('hideLoading');
-				}
+				},
 				success: function(msg) {
 					if (msg.code == 1) {
 						that.data = msg.data;
@@ -97,6 +97,7 @@ var custom = Vue.extend({
 			that.endTime = endTime;
 			that.selName = selName;
 			that.$dispatch('showLoading');
+			that.show = false;
 			$.ajax({
 				url: '/api/pageList',
 				data: {

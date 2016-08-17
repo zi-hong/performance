@@ -44,6 +44,9 @@
 
 	<script type='text/javascript' src='javascripts/custom.js'></script>
 
+	<script type='text/javascript' src='javascripts/uv.js'></script>
+
+
 	<script type="text/javascript" src='javascripts/router.js'></script>
 </head>
 <body>
@@ -57,6 +60,7 @@
 				<li v-link="{ path: '/point' }" v-bind:class="{ 'active': $route.point}" >埋点统计</li>
 				<li v-link="{ path: '/perform' }" v-bind:class="{ 'active': $route.perform}" >基础统计-性能</li>
 				<li v-link="{ path: '/baseInfoPv' }" v-bind:class="{ 'active': $route.baseInfoPv}" >基初统计-pv</li>
+				<li v-link="{ path: '/uv' }" v-bind:class="{ 'active': $route.uv}" >基初统计-uv</li>
 				<li v-link="{ path: '/platform' }" v-bind:class="{ 'active': $route.platform}" >基初统计-平台类型</li>
 				<li v-link="{ path: '/browser' }" v-bind:class="{ 'active': $route.browser}" >基初统计-浏览器类型</li>
 				<li v-link="{ path: '/constant'}" v-bind:class="{ 'active': $route.constant}" >基初统计-实时数据</li>
@@ -246,6 +250,13 @@
 		<input @click="search" class="btn btn-primary" type='button' value='查询' />
 	</form>
 	<div id='chartMian'></div>
+</script>
+<script type="x/template" id='uv-template'>
+	<search v-bind:okfun='okFun' v-bind:url='url'></search>
+	<div id='pvchart-main'></div>
+	<div>
+		<constant-chart :show.sync="showChart" ></constant-chart>
+	</div>
 </script>
 <script type="text/javascript" src='javascripts/home.js'></script>
 </html>

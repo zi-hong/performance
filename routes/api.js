@@ -349,6 +349,84 @@ router.get('/customData', function(req, res, next) {
 		data: dataList
 	});
 })
+router.get('/uv', function(req, res, next) {
+	var project = req.query.project;
+	var startTime = req.query.startTime;
+	var endTime = req.query.endTime;
+	var startTime_time = getTimeByDate(startTime);
+	var endTime_time = getTimeByDate(endTime);
+	var dataList = [];
+	if (fs.existsSync('infoData/' + project)) {
+		for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+			var o = getTimePathByDate(i)
+			var year = o.year;
+			var mouth = o.mouth;
+			var day = o.day;
+			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
+			if (!fs.existsSync(path)) {
+				continue;
+			}
+			var data = fs.readFileSync(path, {
+				'encoding': 'utf8'
+			});
+
+			var d = getUvData(data);
+			if (d) {
+				dataList.push({
+					date: year + '-' + mouth + '-' + day,
+					data: d
+				});
+			}
+		}
+	}
+	res.send({
+		code: 1,
+		data: dataList
+	});
+})
+
+function getUvData(data) {
+	if (!data) {
+		return;
+	}
+	var list = data.split('\r\n');
+	var result = {};
+	/*
+		{
+			page1:{
+				uid1:1,
+				uid2:6
+			}
+		}
+	*/
+	for (var j = 0; j < list.length - 1; j++) {
+		var pageName = list[j].match(/(^|\|)page\=([^|]*)/);
+		var uid = list[j].match(/(^|\|)uid\=([^|]*)/);
+		if (!pageName || !pageName[2]) {
+			continue;
+		}
+		if (!uid || !uid[2]) {
+			continue;
+		}
+		uid = uid[2];
+		var name = decodeURIComponent(pageName[2]).replace(/(\/*((\?|#).*|$))/g, '') || '/';
+		if (result[name]) {
+			if (result[name][uid]) {
+				
+				result[name][uid]++;
+
+			} else {
+				result[name][uid] = 1;
+				result[name].length++;
+			}
+		} else {
+			result[name] = {};
+			result[name][uid] = 1;
+			result[name].length = 1;
+		}
+	}
+	return result;
+}
 
 function getCustomData(data, page, filter) {
 	if (!data) {

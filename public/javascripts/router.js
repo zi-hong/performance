@@ -40,6 +40,10 @@ router.map({
         component:perform,
         perform:true
     },
+    '/byPage':{
+        component:byPage,
+        byPage:true
+    },
     '/custom':{
         component:custom,
         custom:true

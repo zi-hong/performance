@@ -464,17 +464,21 @@ function getCustomData(data, page, filter) {
 		return;
 	}
 	var list = data.split('\r\n');
-	var count = 0;
+	var count = {};
 	for (var j = 0; j < list.length - 1; j++) {
+
 		var pageName = getParamer(list[j], 'page');
 		if (!pageName) {
 			continue;
 		}
 		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
 		var paramer = decodeURIComponent(pageName).split('?');
-		var tamp = paramer[1] ? paramer[1].split('&') : '';
-		if (page == name && tamp.indexOf(filter) != -1) {
-			count++;
+		var tamp = paramer[1] ? paramer[1].split('&') : [];
+		for (var m = 0; m < tamp.length; m++) {
+			var a = tamp[m].split('=');
+			if (a.length > 1 && a[0] == filter && page == name) {
+				count[a[1]] ? count[a[1]]++ : count[a[1]] = 1;
+			}
 		}
 	}
 	return count;

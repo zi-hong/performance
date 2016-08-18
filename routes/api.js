@@ -157,48 +157,10 @@ router.get('/dayData', function(req, res, next) {
 	})
 	/*基本信息统计--项目名*/
 router.get('/infoProjectList', function(req, res, next) {
-		getNameList(req, res, 'infoData');
-	})
-	/*基本信息统计--pv*/
-router.get('/infoPv', function(req, res, next) {
-		var project = req.query.project;
-		var startTime = req.query.startTime;
-		var endTime = req.query.endTime;
+	getNameList(req, res, 'infoData');
+})
 
-		var startTime_time = getTimeByDate(startTime);
-		var endTime_time = getTimeByDate(endTime);
-
-		var dataList = [];
-		if (fs.existsSync('infoData/' + project)) {
-			for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
-
-				var o = getTimePathByDate(i)
-				var year = o.year;
-				var mouth = o.mouth;
-				var day = o.day;
-
-				var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + day + '.txt'
-				if (!fs.existsSync(path)) {
-					continue;
-				}
-				var data = fs.readFileSync(path, {
-					'encoding': 'utf8'
-				});
-				data = getInfoPvData(data);
-				if (data) {
-					dataList.push({
-						date: year + '-' + mouth + '-' + day,
-						data: data
-					});
-				}
-			}
-		}
-		res.send({
-			code: 1,
-			data: dataList
-		});
-	})
-	/*浏览器数据*/
+/*浏览器数据*/
 router.get('/browser', function(req, res, next) {
 		var project = req.query.project;
 		var startTime = req.query.startTime;
@@ -419,8 +381,44 @@ router.get('/uv', function(req, res, next) {
 		data: dataList
 	});
 })
+router.get('/pageInfo', function(req, res, next) {
+	var project = req.query.project;
+	var page = req.query.page;
+	var startTime = req.query.startTime;
+	var endTime = req.query.endTime;
+	var startTime_time = getTimeByDate(startTime);
+	var endTime_time = getTimeByDate(endTime);
+	var dataList = [];
+	if (fs.existsSync('infoData/' + project)) {
+		for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+			var o = getTimePathByDate(i)
+			var year = o.year;
+			var mouth = o.mouth;
+			var day = o.day;
+			var path = 'infoData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
+			if (!fs.existsSync(path)) {
+				continue;
+			}
+			var data = fs.readFileSync(path, {
+				'encoding': 'utf8'
+			});
 
-function getUvData(data) {
+			var d = getUvData(data, page);
+			if (d) {
+				dataList.push({
+					date: year + '-' + mouth + '-' + day,
+					data: d
+				});
+			}
+		}
+	}
+	res.send({
+		code: 1,
+		data: dataList
+	});
+})
+
+function getUvData(data, page) {
 	if (!data) {
 		return;
 	}
@@ -439,10 +437,17 @@ function getUvData(data) {
 
 	for (var j = 0; j < list.length - 1; j++) {
 
-		result.pv++;
-
 		var uid = getParamer(list[j], 'uid');
 		var loginuid = getParamer(list[j], 'loginuid');
+		var pageName = '';
+		if (page) {
+			pagename = getParamer(list[j], 'page');
+			pagename = decodeURIComponent(pagename).replace(/(\/*((\?|#).*|$))/g, '') || '/';;
+			if (page != pagename) {
+				continue;
+			}
+		}
+		result.pv++;
 		if (uid) {
 			if (uvObj[uid]) {
 				uvObj[uid]++;
@@ -691,27 +696,6 @@ function getNameList(req, res, name) {
 			code: 0
 		});
 	}
-}
-/*获得getInfoPvData*/
-function getInfoPvData(data) {
-	if (!data) {
-		return;
-	}
-	var list = data.split('\r\n');
-	var result = {};
-	for (var i = 0; i < list.length - 1; i++) {
-		var pageName = getParamer(list[i], 'page');
-		if (!pageName) {
-			continue;
-		}
-		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
-		if (result[name]) {
-			result[name]++;
-		} else {
-			result[name] = 1;
-		}
-	}
-	return result;
 }
 /*获得数据*/
 function getBaseData(data) {

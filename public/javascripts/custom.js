@@ -20,47 +20,45 @@ var custom = Vue.extend({
 	events: {},
 	methods: {
 		showChart: function() {
-			var date = [];
-			var data = [];
+			var data = {};
+			var legend = [];
+			var series = [];
 			for (var j = 0; j < this.data.length; j++) {
-				date.push(this.data[j].date);
-				data.push(this.data[j].data);
+				for (var m in this.data[j].data) {
+					if (data[m]) {
+						data[m] += this.data[j].data[m];
+					} else {
+						data[m] = this.data[j].data[m];
+					}
+				}
 			}
-			var myChart = echarts.init($('#chartMian').get(0));
+
+			for (var k in data) {
+				legend.push(k);
+				series.push({
+					name: k,
+					value: data[k]
+				});
+			}
+			var myChart = echarts.init($('#pvchart-main').get(0));
 
 			var option = {
 				tooltip: {
 					trigger: 'axis'
 				},
-				toolbox: {
-					show: true,
-					feature: {
-						mark: {
-							show: true
-						},
-						dataView: {
-							show: true,
-							readOnly: false
-						},
-						saveAsImage: {
-							show: true
-						}
-					}
+				tooltip: {
+					trigger: 'item',
+					formatter: "{a} <br/>{b} : {c} ({d}%)"
 				},
 				legend: {
-					data: ['访问次数']
+					data: legend
 				},
-				xAxis: [{
-					type: 'category',
-					data: date
-				}],
-				yAxis: [{
-					type: 'value'
-				}],
 				series: [{
 					name: '访问量',
-					type: 'line',
-					data: data
+					type: 'pie',
+					radius: '55%',
+					center: ['50%', '60%'],
+					data: series
 				}]
 			}
 			myChart.setOption(option);

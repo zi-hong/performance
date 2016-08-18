@@ -24,10 +24,6 @@ router.map({
         component: point,
         point:true
     },
-    '/baseInfoPv':{
-        component: baseInfoPv,
-        baseInfoPv:true
-    },
     '/browser':{
         component: browser,
         browser:true

@@ -425,37 +425,45 @@ function getUvData(data) {
 		return;
 	}
 	var list = data.split('\r\n');
-	var result = {};
-	/*
-		{
-			page1:{
-				uid1:1,
-				uid2:6
-			}
-		}
-	*/
+	var result = {
+		pv: 0,
+		uv: 0,
+		lv: 0
+	};
+	var uvObj = {
+		length: 0
+	};
+	var lvObj = {
+		length: 0
+	};
+
 	for (var j = 0; j < list.length - 1; j++) {
-		var pageName = getParamer(list[j], 'page');
+
+		result.pv++;
+
 		var uid = getParamer(list[j], 'uid');
-		if (!pageName || !uid) {
-			continue;
-		}
-		var name = decodeURIComponent(pageName).replace(/(\/*((\?|#).*|$))/g, '') || '/';
-		if (result[name]) {
-			if (result[name][uid]) {
-
-				result[name][uid]++;
-
+		var loginuid = getParamer(list[j], 'loginuid');
+		if (uid) {
+			if (uvObj[uid]) {
+				uvObj[uid]++;
 			} else {
-				result[name][uid] = 1;
-				result[name].length++;
+				uvObj[uid] = 1;
+				uvObj.length++;
 			}
-		} else {
-			result[name] = {};
-			result[name][uid] = 1;
-			result[name].length = 1;
 		}
+
+		if (loginuid) {
+			if (lvObj[loginuid]) {
+				lvObj[loginuid]++;
+			} else {
+				lvObj[loginuid] = 1;
+				lvObj.length++;
+			}
+		}
+
 	}
+	result.uv = uvObj.length;
+	result.lv = lvObj.length;
 	return result;
 }
 

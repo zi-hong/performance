@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 /*性能分析获取项目名*/
 router.get('/getObjet', function(req, res, next) {
 		isLogin(req, res);
-		getNameList(req, res,'allData/');
+		getNameList(req, res, 'allData/');
 	})
 	/*性能统计数据*/
 router.get('/performanceData', function(req, res, next) {
@@ -35,7 +35,7 @@ router.get('/performanceData', function(req, res, next) {
 	/*打点统计--项目名*/
 router.get('/pointProjectList', function(req, res, next) {
 		isLogin(req, res);
-		getNameList(req, res,'traceData/');
+		getNameList(req, res, 'traceData/');
 	})
 	/*打点统计--埋点统计*/
 router.get('/pointData', function(req, res, next) {
@@ -110,7 +110,7 @@ router.get('/dayData', function(req, res, next) {
 	/*基本信息统计--项目名*/
 router.get('/infoProjectList', function(req, res, next) {
 	isLogin(req, res);
-	getNameList(req, res,'infoData/');
+	getNameList(req, res, 'infoData/');
 })
 
 /*浏览器数据*/
@@ -643,14 +643,15 @@ function getNameList(req, res, path) {
 		var list = fs.readdirSync(path);
 		var result = [];
 		console.log(req.session.user);
+		console.log(list);
 		var projectsList = userInfo[req.session.user].project;
 		for (var j = 0; j < list.length; j++) {
 			var l = list[j].replace(/(\..*$)/, '')
-			if (projectsList.indexOf(l)) {
+			if (projectsList.indexOf(l) != -1) {
 				result.push(l);
 			}
 		}
-
+		console.log(result);
 		res.send({
 			projects: result,
 			code: 1

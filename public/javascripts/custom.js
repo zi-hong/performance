@@ -32,14 +32,23 @@ var custom = Vue.extend({
 					}
 				}
 			}
-
+			var other = 0;
 			for (var k in data) {
+				if (k == 'total') {
+					continue;
+				}
+				other += data[k];
 				legend.push(k);
 				series.push({
 					name: k,
 					value: data[k]
 				});
 			}
+			legend.push('其他');
+				series.push({
+					name: '其他',
+					value: data.total-other
+				});
 			var myChart = echarts.init($('#pvchart-main').get(0));
 
 			var option = {

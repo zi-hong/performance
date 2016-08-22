@@ -477,9 +477,9 @@ function getCustomData(data, page, filter) {
 		return;
 	}
 	var list = data.split('\r\n');
-	var count = {};
+	var count = {total:0};
 	for (var j = 0; j < list.length - 1; j++) {
-
+		count.total++;
 		var pageName = getParamer(list[j], 'page');
 		if (!pageName) {
 			continue;

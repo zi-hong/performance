@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var getData = require('../getData');
 var isLogin = require('../dep/login');
+var userInfo = require('../config/userConfig');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -14,13 +15,8 @@ router.get('/login', function(req, res, next) {
 	res.render('login', {});
 })
 router.post('/login', function(req, res, next) {
-	var loginInfo = {
-		id: '1111',
-		name: 'admin',
-		password: '1230'
-	}
-	if (req.body.name == loginInfo.name && req.body.password == loginInfo.password) {
-		req.session.user = loginInfo.id;
+	if (userInfo[req.body.name] && req.body.password == userInfo[req.body.name].password) {
+		req.session.user = req.body.name;
 		res.send({
 			isLogin: true,
 			msg: ''

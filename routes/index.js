@@ -3,6 +3,13 @@ var router = express.Router();
 var fs = require('fs');
 var getData = require('../getData');
 var isLogin = require('../dep/login');
+var mongoose = require('mongoose');
+
+
+var trace = require('../models/trace').traceData;
+var info = require('../models/info').infoData;
+
+var Schema = mongoose.Schema;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -80,6 +87,36 @@ router.get('/trace', function(req, res, next) {
 router.get('/info', function(req, res, next) {
 	saveData(req, res, 'infoData');
 })
+router.get('/infoTest', function(req, res, next) {
+	saveDataTest(req, res, 'infoData');
+})
+
+function saveDataTest(req, res, name) {
+
+	var d = new Date().getTime();
+	var queryModel = {
+		creatTime: d
+	};
+	var sch = {}
+	for (var i in req.query) {
+		queryModel[i] = req.query[i];
+		sch[i] = String;
+	}
+	var key = {
+		infoData: info,
+		traceData: trace
+	}
+	console.log(name);
+	key[name].schema.add(sch);
+	var infoM = new key[name](queryModel);
+	infoM.save(function(err) {
+		if (err) {
+			console.log('保存失败');
+			return;
+		}
+	});
+	res.send('');
+}
 
 function saveData(req, res, name) {
 	var project = req.query.project;

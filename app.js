@@ -10,6 +10,10 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
 
+var mongoose = require('mongoose');
+var mongDBServer = require('./config/config').mongodb;
+var conn = mongoose.connect(mongDBServer + '/performance');
+
 var app = express();
 
 // view engine setup

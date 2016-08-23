@@ -2,44 +2,25 @@ var express = require('express');
 var router = express.Router();
 var isLogin = require('../dep/login');
 var getData = require('../getData');
-// var mongoose = require('mongoose');
-// var mongDBServer = require('../config/config').mongodb;
+var mongoose = require('mongoose');
+
+var trace = require('../models/trace').traceData;
+var info = require('../models/info').infoData;
+
 var fs = require('fs');
 
+var Schema = mongoose.Schema;
+//骨架模版
+var schema = new Schema({})
+
 router.get('/', function(req, res, next) {
-	// var conn = mongoose.connect(mongDBServer + '/infoData');
-	// var Schema = mongoose.Schema;
-	// //骨架模版
-	// var movieSchema = new Schema({
-	// 		doctor: String,
-	// 		title: String,
-	// 		language: String,
-	// 		country: String,
-	// 		year: Number,
-	// 		summary: String,
-	// 		poster: String,
-	// 		flash: String
-	// 	})
-	// 	//模型
-	// var Movie = mongoose.model('Movie', movieSchema);
-	// //存储数据
-	// var moive = new Movie({
-	// 		title: '黑衣人三',
-	// 		doctor: '史密斯',
-	// 		year: 2018,
-	// 		flash: 'http://player.youku.com/player.php/sid/XNjA1Njc0NTUy/v.swf',
-	// 		country: '美国',
-	// 		language: '英语',
-	// 		summary: '好片'
-	// 	})
-	// 	//保存数据库
-	// moive.save(function(err) {
-	// 	if (err) {
-	// 		console.log('保存失败')
-	// 		return;
-	// 	}
-	// 	console.log('meow');
-	// });
+	info.find({}, function(err, doc) {
+		if (doc) {
+			console.log(doc);
+		} else {
+			console.log(err);
+		}
+	})
 	res.send('api');
 });
 /*性能分析获取项目名*/

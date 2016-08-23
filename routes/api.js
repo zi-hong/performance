@@ -1,19 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var isLogin = require('../dep/login');
+var userInfo = require('../config/userConfig');
+
 var getData = require('../getData');
-var mongoose = require('mongoose');
 
 var trace = require('../models/trace').traceData;
 var info = require('../models/info').infoData;
 
 var fs = require('fs');
 
-var Schema = mongoose.Schema;
-//骨架模版
-var schema = new Schema({})
 
 router.get('/', function(req, res, next) {
+
 	info.find({}, function(err, doc) {
 		if (doc) {
 			console.log(doc);
@@ -26,22 +25,7 @@ router.get('/', function(req, res, next) {
 /*性能分析获取项目名*/
 router.get('/getObjet', function(req, res, next) {
 		isLogin(req, res);
-		try {
-			var projectsList = fs.readdirSync('allData/');
-			var projectsList_name = [];
-			for (var j = 0; j < projectsList.length; j++) {
-				projectsList_name.push(projectsList[j].replace('.txt', ''));
-			}
-			res.send({
-				projects: projectsList_name,
-				code: 1
-			});
-		} catch (ex) {
-			res.send({
-				message: ex.message,
-				code: 0
-			});
-		}
+		getNameList(req, res, 'allData/');
 	})
 	/*性能统计数据*/
 router.get('/performanceData', function(req, res, next) {
@@ -64,7 +48,7 @@ router.get('/performanceData', function(req, res, next) {
 	/*打点统计--项目名*/
 router.get('/pointProjectList', function(req, res, next) {
 		isLogin(req, res);
-		getNameList(req, res, 'traceData');
+		getNameList(req, res, 'traceData/');
 	})
 	/*打点统计--埋点统计*/
 router.get('/pointData', function(req, res, next) {
@@ -138,7 +122,7 @@ router.get('/dayData', function(req, res, next) {
 	})
 	/*基本信息统计--项目名*/
 router.get('/infoProjectList', function(req, res, next) {
-	getNameList(req, res, 'infoData');
+	getNameList(req, res, 'infoData/');
 })
 
 /*浏览器数据*/
@@ -664,11 +648,19 @@ function getDayData(data) {
 	return result;
 }
 /*获得项目名*/
-function getNameList(req, res, name) {
+function getNameList(req, res, path) {
 	try {
-		var projectsList = fs.readdirSync(name + '/');
+		var list = fs.readdirSync(path);
+		var result = [];
+		var projectsList = userInfo[req.session.user] ? userInfo[req.session.user].project : [];
+		for (var j = 0; j < list.length; j++) {
+			var l = list[j].replace(/(\..*$)/, '')
+			if (projectsList.indexOf(l) != -1) {
+				result.push(l);
+			}
+		}
 		res.send({
-			projects: projectsList,
+			projects: result,
 			code: 1
 		});
 	} catch (ex) {

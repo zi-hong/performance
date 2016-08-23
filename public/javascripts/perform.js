@@ -5,7 +5,7 @@ var perform = Vue.extend({
 			data: '',
 			showChart: false,
 			okFun: this.getData,
-			url: '/api/pointProjectList'
+			url: '/api/infoProjectList'
 		}
 	},
 	components: {

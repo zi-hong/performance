@@ -21,9 +21,9 @@ var byPage = Vue.extend({
 	methods: {
 		chart: function() {
 			var date = [];
-			var uv=[];
-			var pv=[];
-			var lv=[];
+			var uv = [];
+			var pv = [];
+			var lv = [];
 			for (var j = 0; j < this.data.length; j++) {
 				date.push(this.data[j].date);
 				uv.push(this.data[j].data.uv);
@@ -51,7 +51,7 @@ var byPage = Vue.extend({
 					}
 				},
 				legend: {
-					data: ['uv','pv','登录数']
+					data: ['uv', 'pv', '登录数']
 				},
 				xAxis: [{
 					type: 'category',
@@ -64,11 +64,11 @@ var byPage = Vue.extend({
 					name: 'uv',
 					type: 'line',
 					data: uv
-				},{
+				}, {
 					name: 'pv',
 					type: 'line',
 					data: pv
-				},{
+				}, {
 					name: '登录数',
 					type: 'line',
 					data: lv
@@ -96,12 +96,19 @@ var byPage = Vue.extend({
 					that.$dispatch('hideLoading');
 				},
 				success: function(msg) {
-					that.show = true;
-					that.currentPage = msg.data[0] || '';
-					that.pageList = msg.data;
+					if (msg.code == 1) {
+						that.show = true;
+						that.pageList = msg.data;
+						setTimeout(function(){
+							that.currentPage = msg.data[0] || '';
+						},300)
+					} else {
+						alert('查找失败');
+					}
+
 				},
 				error: function() {
-
+					alert('查找失败');
 				}
 			})
 		},

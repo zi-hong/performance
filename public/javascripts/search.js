@@ -1,10 +1,32 @@
+Date.prototype.format=function(){
+    var _0=function(){
+        return this<10?("0"+this):this;
+    };
+    return function(s){
+        var map={
+            y:this.getFullYear(),
+            M:_0.call(this.getMonth()+1),
+            d:_0.call(this.getDate()),
+            H:_0.call(this.getHours()),
+            m:_0.call(this.getMinutes()),
+            s:_0.call(this.getSeconds())};
+        return (s||"{y}-{M}-{d} {H}:{m}:{s}").replace( /{(y|M|d|H|m|s)+}/g, function(s,t){
+            return map[t];
+        });
+    };
+}();
+
+
 var search = Vue.extend({
 	template: '#search-template',
 	data: function() {
+	    
+	    var today = (new Date()).format("{yyyy}-{MM}-{dd}");
+	    
 		return {
 			objets: [],
-			startTime: '',
-			endTime: '',
+			startTime: today,
+			endTime: today,
 			selName: '',
 		}
 	},

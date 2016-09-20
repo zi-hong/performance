@@ -26,6 +26,7 @@ var pointChart = Vue.extend({
 		selPage: function(val) {
 			this.showChartFun(val, this.currentData);
 			this.showPeopleChart(val,this.currentData);
+			this.showLoginPeopleChart(val,this.currentData);
 		}
 	},
 	methods: {
@@ -178,6 +179,73 @@ var pointChart = Vue.extend({
 				series: series
 			};
 			myChart.setOption(option);
-		}
+		},
+		
+		
+		showLoginPeopleChart:function(val, data){
+            var date = [];
+            var tidList = [];
+            for (var i = 0; i < data.length; i++) {
+                date.push(data[i].date);
+                if(data[i].data[val]){
+                    tidList.push(data[i].data[val]);
+                }
+            }
+            for (var k = 0; k < tidList.length; k++) {
+                for (var m = 0; m < tidList[k].length; m++) {
+                    tidList[k][m].name = tidList[k][m].tid;
+                    tidList[k][m].type = 'bar';
+                    tidList[k][m].data = tidList[k][m].loginuser.length;
+                }
+            }
+            var d = {};
+            for (var n = 0; n < tidList.length; n++) {
+                for (var a = 0; a < tidList[n].length; a++) {
+                    if (!d[tidList[n][a].tid]) {
+                        d[tidList[n][a].tid] = [];
+                    }
+                    var sub = n - d[tidList[n][a].tid].length;
+                    for (var t = 0; t < sub - 1; t++) {
+                        d[tidList[n][a].tid].push(0);
+                    }
+                    d[tidList[n][a].tid].push(tidList[n][a].data);
+                }
+            }
+            var series = [];
+            var legend = [];
+            for (var h in d) {
+                legend.push(h);
+                series.push({
+                    name: h,
+                    type: 'bar',
+                    barMaxWidth:30,
+                    data: d[h]
+                })
+            }
+            var myChart = echarts.init(document.getElementById('loginUVMian'));
+            option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: legend
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: date
+                }],
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: series
+            };
+            myChart.setOption(option);
+        }
 	}
 })

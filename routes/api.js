@@ -202,6 +202,44 @@ router.get('/platform', function(req, res, next) {
 		data: dataList
 	});
 })
+    /*特殊信息统计--导流我的贷款portal*/
+router.get('/spec', function(req, res, next) {
+    var project = req.query.project;
+    var startTime = req.query.startTime;
+    var endTime = req.query.endTime;
+
+    var startTime_time = getTimeByDate(startTime);
+    var endTime_time = getTimeByDate(endTime);
+
+    var dataList = [];
+    if (fs.existsSync('specData/' + project)) {
+        for (var i = startTime_time; i <= endTime_time; i += 1000 * 60 * 60 * 24) {
+            var o = getTimePathByDate(i)
+            var year = o.year;
+            var mouth = o.mouth;
+            var day = o.day;
+            var path = 'specData/' + project + '/' + year + '-' + mouth + '-' + '' + day + '.txt';
+            if (!fs.existsSync(path)) {
+                continue;
+            }
+            var data = fs.readFileSync(path, {
+                'encoding': 'utf8'
+            });
+            data = getSpecData(data);
+            data = formatSpecData(data);
+            if (data) {
+                dataList.push({
+                    date: year + '-' + mouth + '-' + day,
+                    data: data
+                });
+            }
+        }
+    }
+    res.send({
+        code: 1,
+        data: dataList
+    });
+})
 router.get('/performance', function(req, res, next) {
 	var project = req.query.project;
 	var startTime = req.query.startTime;
@@ -607,6 +645,38 @@ function getPlatformData(data) {
 	}
 	return result;
 }
+
+/*特殊信息统计--portal*/
+function getSpecData(data) {
+    if (!data) {
+        return;
+    }
+    var list = data.split('\r\n');
+    var result = {};
+    for (var i = 0; i < list.length - 1; i++) {
+        var count = list[i].match(/(^|\|)recommendCount\=([^|]*)/)[2];
+        var uid = list[i].match(/(^|\|)uid\=([^|]*)/)[2];
+        
+        result[uid] = Math.max( count, result[uid]?result[uid]:0 )
+    }
+    return result;
+}
+function formatSpecData(data) {
+    if (!data) {
+        return;
+    }
+    var result = {};
+    for (var k in data) {
+        var v = data[k];
+        if ( result[v] ) {
+            result[v]++
+        } else {
+            result[v] = 1
+        }
+    }
+    return result;
+}
+
 /*按小时数据*/
 function getDayData(data) {
 	/*
@@ -731,6 +801,12 @@ function getBaseData(data) {
 						result[rowObj.page][k].user[rowObj.uid] = 1;
 						result[rowObj.page][k].user.length++;
 					}
+					if (result[rowObj.page][k].loginuser[rowObj.loginuid]) {
+                        result[rowObj.page][k].loginuser[rowObj.loginuid]++
+                    } else {
+                        result[rowObj.page][k].loginuser[rowObj.loginuid] = 1;
+                        result[rowObj.page][k].loginuser.length++;
+                    }
 				}
 			}
 			if (!isHas) {
@@ -739,9 +815,13 @@ function getBaseData(data) {
 					number: 1,
 					user: {
 						length: 1
-					}
+					},
+                    loginuser: {
+                        length: 1
+                    }
 				};
 				obj.user[rowObj.uid] = 1
+				obj.loginuser[rowObj.loginuid] = 1
 				result[rowObj.page].push(obj);
 			}
 		} else {
@@ -750,9 +830,13 @@ function getBaseData(data) {
 				number: 1,
 				user: {
 					length: 1
+				},
+				loginuser: {
+				    length: 1
 				}
 			};
 			obj.user[rowObj.uid] = 1
+			obj.loginuser[rowObj.loginuid] = 1
 			result[rowObj.page] = [obj];
 		}
 	}
@@ -763,6 +847,11 @@ function getBaseData(data) {
 					delete result[h][m].user[n];
 				}
 			}
+			for (var n in result[h][m].loginuser) {
+                if (n != 'length') {
+                    delete result[h][m].loginuser[n];
+                }
+            }
 		}
 	}
 	return result;

@@ -35,6 +35,7 @@
 	<script type='text/javascript' src='javascripts/platform.js'></script>
 
 	<script type='text/javascript' src='javascripts/byPage.js'></script>
+	<script type='text/javascript' src='javascripts/spec.js'></script>
 	
 	<script type="text/javascript" src='javascripts/constant.js'></script>
 
@@ -50,7 +51,7 @@
 	<script type="text/javascript" src='javascripts/router.js'></script>
 </head>
 <body>
-	<div class='head'>58金融页面性能统计</div>
+	<div class='head'>58金融日志系统</div>
 	<div id='navList'>
 		<div class='page-left' >
 			<ul @click='changeRouter'>
@@ -65,6 +66,7 @@
 				<li v-link="{ path: '/browser' }" v-bind:class="{ 'active': $route.browser}" >基初统计-浏览器类型</li>
 				<li v-link="{ path: '/constant'}" v-bind:class="{ 'active': $route.constant}" >基初统计-实时数据</li>
 				<li v-link="{ path: '/custom'}" v-bind:class="{ 'active': $route.custom}" >基础统计-自定义</li>
+				<li v-link="{ path: '/spec'}" v-bind:class="{ 'active': $route.spec}" >特殊统计-导流portal页</li>
 			</ul>
 		</div>
 		<div class='page-right'>
@@ -98,6 +100,13 @@
 <script type='x/template' id='perform-template'>
 	<search v-bind:okfun='okFun' v-bind:url='url'></search>
 	<constant-chart :show.sync="showChart" ></constant-chart>
+</script>
+<script type='x/template' id='spec-template'>
+    此页面仅用于 导流 我的贷款 portal首页
+    <search v-bind:okfun='okFun' v-bind:url='url'></search>
+    <div id='spec-chart-main'>
+        
+    </div>
 </script>
 <script type="x/template" id='search-template'>
 	<form class='form-inline'>
@@ -177,10 +186,12 @@
 			</select>
 		</form>
 		</div>
-		<div class='people'>总量统计</div>
+		<div class='people'>PV统计</div>
 		<div id='pointMian'></div>
-		<div class='people'>人数统计</div>
+		<div class='people'>UV统计</div>
 		<div id='chartMian'></div>
+		<div class='people'>LoginUV统计</div>
+        <div id='loginUVMian'></div>
 	</div>
 </script>
 

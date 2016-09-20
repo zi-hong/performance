@@ -83,6 +83,9 @@ router.get('/trace', function(req, res, next) {
 router.get('/info', function(req, res, next) {
 	saveData(req, res, 'infoData');
 })
+router.get('/spec', function(req, res, next) {
+    saveData(req, res, 'specData');
+})
 router.get('/infoTest', function(req, res, next) {
 	saveDataTest(req, res, 'infoData');
 })
@@ -126,7 +129,6 @@ function saveData(req, res, name) {
 	var ip = getClientIp(req);
 	if (filterIp(ip)) {
 		if (name == 'infoData') {
-			console.log('ip=' + ip);
 			data += 'ip=' + ip + '|';
 		}
 	} else {

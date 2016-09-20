@@ -163,7 +163,7 @@ select{
 .chartCon{
     margin-top: 40px;
 }
-#chartMian{
+#chartMian,#loginUVMian{
     width: 80%;
     height:400px;
 }
@@ -171,7 +171,7 @@ select{
     width: 80%;
     height:400px;
 }
-#pvchart-main,#allNumber,#browser-main{
+#pvchart-main,#allNumber,#browser-main,#spec-chart-main{
     width: 80%;
     height:400px;
     margin-top: 20px;

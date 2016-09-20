@@ -44,6 +44,10 @@ router.map({
         component:byPage,
         byPage:true
     },
+    '/spec':{
+        component:spec,
+        spec:true
+    },
     '/custom':{
         component:custom,
         custom:true
